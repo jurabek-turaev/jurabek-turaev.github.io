@@ -28,31 +28,65 @@
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
-            margin: 0;
-            padding: 0;
-            line-height: 1.7;
-            transition: background-color 0.3s, color 0.3s;
+            margin: 0; padding: 0; line-height: 1.7;
+            transition: background-color 0.4s ease, color 0.4s ease;
             overflow-x: hidden;
         }
 
         #bg-canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; }
 
-        .controls { position: fixed; top: 20px; right: 20px; display: flex; gap: 15px; z-index: 100; }
-        .controls select, .controls button {
+        .controls { position: fixed; top: 20px; right: 20px; display: flex; gap: 12px; z-index: 100; }
+        
+        .control-btn {
             background: var(--glass-bg); color: var(--heading-color); border: 1px solid var(--border-color);
-            padding: 8px 15px; border-radius: 20px; cursor: pointer; backdrop-filter: blur(10px);
-            font-family: inherit; outline: none; transition: 0.3s;
+            padding: 8px 16px; border-radius: 25px; cursor: pointer; backdrop-filter: blur(12px);
+            font-family: inherit; font-size: 0.95rem; outline: none; transition: 0.3s ease;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
         }
-        .controls button:hover, .controls select:hover { border-color: var(--accent-color); }
+        .control-btn:hover { border-color: var(--accent-color); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1);}
+
+        .custom-dropdown { position: relative; display: inline-block; }
+        .chevron { width: 14px; height: 14px; fill: currentColor; transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
+        .custom-dropdown.open .chevron { transform: rotate(180deg); }
+        
+        .dropdown-menu {
+            position: absolute; top: calc(100% + 10px); right: 0;
+            background: var(--glass-bg); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--border-color); border-radius: 12px;
+            list-style: none; padding: 8px 0; margin: 0; min-width: 140px;
+            opacity: 0; visibility: hidden; transform: translateY(-15px) scale(0.95);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2); z-index: 101;
+        }
+        .custom-dropdown.open .dropdown-menu { opacity: 1; visibility: visible; transform: translateY(0) scale(1); }
+        
+        .dropdown-menu li {
+            padding: 10px 20px; cursor: pointer; color: var(--heading-color); font-size: 0.9rem;
+            transition: background 0.2s, color 0.2s; display: flex; align-items: center; gap: 10px;
+        }
+        .dropdown-menu li:hover { background: rgba(130, 170, 255, 0.15); color: var(--accent-color); }
+
+        /* Bayroqlar uchun stil */
+        .flag-icon { width: 20px; height: 14px; border-radius: 2px; object-fit: cover; box-shadow: 0 1px 3px rgba(0,0,0,0.2);}
+
+        #theme-switch { width: 42px; height: 42px; padding: 0; position: relative; overflow: hidden; }
+        #theme-switch svg {
+            position: absolute; width: 20px; height: 20px;
+            transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55), opacity 0.4s ease;
+        }
+        .sun-icon { opacity: 1; transform: rotate(0deg) scale(1); }
+        .moon-icon { opacity: 0; transform: rotate(-90deg) scale(0.5); }
+        [data-theme="light"] .sun-icon { opacity: 0; transform: rotate(90deg) scale(0.5); }
+        [data-theme="light"] .moon-icon { opacity: 1; transform: rotate(0deg) scale(1); }
 
         .glass-container {
-            max-width: 900px; margin: 4rem auto; background: var(--glass-bg);
+            max-width: 900px; margin: 5rem auto 3rem; background: var(--glass-bg);
             backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
             border: 1px solid var(--border-color); border-radius: 20px; padding: 3rem;
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
         }
         @media (max-width: 768px) {
-            .glass-container { margin: 1rem; padding: 1.5rem; }
+            .glass-container { margin: 4rem 1rem 1rem; padding: 1.5rem; }
             .controls { top: 10px; right: 10px; }
         }
 
@@ -65,8 +99,9 @@
         .contact-info a, .contact-info span {
             color: var(--text-color); text-decoration: none; display: flex; align-items: center; gap: 5px;
             background: rgba(0,0,0,0.1); padding: 5px 15px; border-radius: 20px; border: 1px solid var(--border-color);
+            transition: 0.3s;
         }
-        .contact-info a:hover { color: var(--accent-color); border-color: var(--accent-color); }
+        .contact-info a:hover { color: var(--accent-color); border-color: var(--accent-color); transform: translateY(-2px);}
 
         .section-title { font-size: 1.8rem; border-bottom: 2px solid var(--border-color); padding-bottom: 10px; margin-bottom: 25px; display: inline-block; }
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
@@ -80,8 +115,9 @@
 
         .skills-container { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 2rem;}
         .skill-tag { background-color: rgba(130, 170, 255, 0.1); color: var(--accent-color); padding: 8px 16px; border-radius: 8px; font-size: 0.9rem; border: 1px solid rgba(130, 170, 255, 0.2); }
-        .lang-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px dashed var(--border-color); }
+        .lang-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px dashed var(--border-color); }
         .lang-item:last-child { border-bottom: none; }
+        .lang-name { display: flex; align-items: center; gap: 8px; }
     </style>
 </head>
 <body>
@@ -89,12 +125,26 @@
     <canvas id="bg-canvas"></canvas>
 
     <nav class="controls">
-        <select id="lang-switch">
-            <option value="en">English</option>
-            <option value="ru">Русский</option>
-            <option value="uz">O'zbek</option>
-        </select>
-        <button id="theme-switch" title="Tema o'zgartirish">🌓</button>
+        <div class="custom-dropdown" id="lang-dropdown">
+            <button class="control-btn" id="lang-btn">
+                <span id="current-lang-text">English</span>
+                <svg class="chevron" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+            </button>
+            <ul class="dropdown-menu">
+                <li data-value="en"><img src="https://flagcdn.com/w20/us.png" class="flag-icon" alt="EN"> English</li>
+                <li data-value="ru"><img src="https://flagcdn.com/w20/ru.png" class="flag-icon" alt="RU"> Русский</li>
+                <li data-value="uz"><img src="https://flagcdn.com/w20/uz.png" class="flag-icon" alt="UZ"> O'zbek</li>
+            </ul>
+        </div>
+
+        <button class="control-btn" id="theme-switch" title="Tema o'zgartirish">
+            <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+            <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+        </button>
     </nav>
 
     <div class="glass-container">
@@ -137,7 +187,7 @@
                             <h3 data-i18n="exp_role">AI Engineer</h3>
                             <div style="font-size: 0.95rem; color: var(--text-color);" data-i18n="exp_company">Tenzorsoft | Tashkent, Uzbekistan</div>
                         </div>
-                        <span class="date-badge">08/2025 - 03/2026</span>
+                        <span class="date-badge" data-i18n="exp_date">08/2025 - 03/2026</span>
                     </div>
                     <p data-i18n="exp_desc">Created an AI workflow with langgraph framework for Chemical industry of Uzbekistan.</p>
                 </div>
@@ -157,9 +207,9 @@
 
                 <div class="card">
                     <h3 style="margin-bottom: 10px;" data-i18n="lang_title">Languages</h3>
-                    <div class="lang-item"><span data-i18n="lang_uz">UZ Uzbek</span> <span style="color: var(--heading-color);" data-i18n="lang_native">Native</span></div>
-                    <div class="lang-item"><span data-i18n="lang_en">EN English</span> <span style="color: var(--heading-color);">B2 (CEFR)</span></div>
-                    <div class="lang-item"><span data-i18n="lang_ru">RU Russian</span> <span style="color: var(--heading-color);">B1</span></div>
+                    <div class="lang-item"><span class="lang-name" data-i18n="lang_uz"><img src="https://flagcdn.com/w20/uz.png" class="flag-icon" alt="UZ"> Uzbek</span> <span style="color: var(--heading-color);" data-i18n="lang_native">Native</span></div>
+                    <div class="lang-item"><span class="lang-name" data-i18n="lang_en"><img src="https://flagcdn.com/w20/us.png" class="flag-icon" alt="EN"> English</span> <span style="color: var(--heading-color);">B2 (CEFR)</span></div>
+                    <div class="lang-item"><span class="lang-name" data-i18n="lang_ru"><img src="https://flagcdn.com/w20/ru.png" class="flag-icon" alt="RU"> Russian</span> <span style="color: var(--heading-color);">B1</span></div>
                 </div>
             </section>
         </div>
@@ -202,13 +252,17 @@
     <script>
         const translations = {
             en: {
-                role: "AI Engineer", location: "📍 Tashkent, Uzbekistan",
+                name: "English", role: "AI Engineer", location: "📍 Tashkent, Uzbekistan",
                 skills_title: "Technologies & Skills", exp_title: "Experience",
                 exp_role: "AI Engineer", exp_company: "Tenzorsoft | Tashkent, Uzbekistan",
-                exp_date: "08/2025 - Present", exp_desc: "Created an AI workflow with langgraph framework for Chemical industry of Uzbekistan.",
+                exp_date: "08/2025 - 03/2026", exp_desc: "Created an AI workflow with langgraph framework for Chemical industry of Uzbekistan.",
                 edu_title: "Education", edu_degree: "Bachelor: Agribusiness and Digital Economy",
                 edu_uni: "Andijan Institute of Agriculture and Agrotechnologies",
-                lang_title: "Languages", lang_uz: "UZ Uzbek", lang_en: "EN English", lang_ru: "RU Russian", lang_native: "Native",
+                lang_title: "Languages", 
+                lang_uz: "<img src='https://flagcdn.com/w20/uz.png' class='flag-icon' alt='UZ'> Uzbek", 
+                lang_en: "<img src='https://flagcdn.com/w20/us.png' class='flag-icon' alt='EN'> English", 
+                lang_ru: "<img src='https://flagcdn.com/w20/ru.png' class='flag-icon' alt='RU'> Russian", 
+                lang_native: "Native",
                 proj_title: "Projects",
                 p1_desc: "We built an AI assistant for the Uzbekistan's Chemical Industry platform to let users ask business questions in natural language and get data-driven answers instantly.",
                 p1_l1: "Uses a LangGraph workflow to classify user intent, generate SQL with LLM, execute queries on PostgreSQL, and produce clear final responses.",
@@ -224,13 +278,17 @@
                 p3_l3: "Containerized with Docker and served via Uvicorn for a lightweight, production-ready backend."
             },
             uz: {
-                role: "AI Muhandisi", location: "📍 Toshkent, O'zbekiston",
+                name: "O'zbek", role: "AI Muhandisi", location: "📍 Toshkent, O'zbekiston",
                 skills_title: "Texnologiyalar va Ko'nikmalar", exp_title: "Ish Tajribasi",
                 exp_role: "AI Muhandisi", exp_company: "Tenzorsoft | Toshkent, O'zbekiston",
-                exp_date: "08/2025 - Hozirgacha", exp_desc: "O'zbekiston kimyo sanoati uchun LangGraph yordamida AI ish oqimini (workflow) yaratdi.",
+                exp_date: "08/2025 - 03/2026", exp_desc: "O'zbekiston kimyo sanoati uchun LangGraph yordamida AI ish oqimini (workflow) yaratdi.",
                 edu_title: "Ta'lim", edu_degree: "Bakalavr: Agrobiznes va Raqamli Iqtisodiyot",
                 edu_uni: "Andijon Qishloq Xo'jaligi va Agrotexnologiyalar Instituti",
-                lang_title: "Tillar", lang_uz: "UZ O'zbek tili", lang_en: "EN Ingliz tili", lang_ru: "RU Rus tili", lang_native: "Ona tili",
+                lang_title: "Tillar", 
+                lang_uz: "<img src='https://flagcdn.com/w20/uz.png' class='flag-icon' alt='UZ'> O'zbek tili", 
+                lang_en: "<img src='https://flagcdn.com/w20/us.png' class='flag-icon' alt='EN'> Ingliz tili", 
+                lang_ru: "<img src='https://flagcdn.com/w20/ru.png' class='flag-icon' alt='RU'> Rus tili", 
+                lang_native: "Ona tili",
                 proj_title: "Asosiy Loyihalar",
                 p1_desc: "O'zbekiston kimyo sanoati platformasi uchun biznes savollarga tabiiy tilda ma'lumotlarga asoslangan javob beruvchi AI yordamchi.",
                 p1_l1: "Foydalanuvchi maqsadini aniqlash, LLM orqali SQL yozish va PostgreSQL'da so'rovlarni bajarish uchun LangGraph ish oqimi qo'llanildi.",
@@ -246,13 +304,17 @@
                 p3_l3: "Loyiha Docker yordamida konteynerizatsiya qilindi va ishlab chiqarishga (production) tayyorlandi."
             },
             ru: {
-                role: "AI Инженер", location: "📍 Ташкент, Узбекистан",
+                name: "Русский", role: "AI Инженер", location: "📍 Ташкент, Узбекистан",
                 skills_title: "Технологии и Навыки", exp_title: "Опыт работы",
                 exp_role: "AI Инженер", exp_company: "Tenzorsoft | Ташкент, Узбекистан",
-                exp_date: "08/2025 - Настоящее время", exp_desc: "Создал рабочий процесс ИИ с использованием LangGraph для химической промышленности Узбекистана.",
+                exp_date: "08/2025 - 03/2026", exp_desc: "Создал рабочий процесс ИИ с использованием LangGraph для химической промышленности Узбекистана.",
                 edu_title: "Образование", edu_degree: "Бакалавр: Агробизнес и Цифровая Экономика",
                 edu_uni: "Андижанский институт сельского хозяйства и агротехнологий",
-                lang_title: "Языки", lang_uz: "UZ Узбекский", lang_en: "EN Английский", lang_ru: "RU Русский", lang_native: "Родной",
+                lang_title: "Языки", 
+                lang_uz: "<img src='https://flagcdn.com/w20/uz.png' class='flag-icon' alt='UZ'> Узбекский", 
+                lang_en: "<img src='https://flagcdn.com/w20/us.png' class='flag-icon' alt='EN'> Английский", 
+                lang_ru: "<img src='https://flagcdn.com/w20/ru.png' class='flag-icon' alt='RU'> Русский", 
+                lang_native: "Родной",
                 proj_title: "Проекты",
                 p1_desc: "Разработан ИИ-помощник для платформы Химической промышленности РУз, позволяющий задавать бизнес-вопросы на естественном языке.",
                 p1_l1: "Использует LangGraph для классификации намерений, генерации SQL и выполнения запросов в PostgreSQL.",
@@ -269,23 +331,38 @@
             }
         };
 
-        // Yaxshilangan va xatosiz tarjima mantiqi
-        const langSwitch = document.getElementById('lang-switch');
+        const dropdown = document.getElementById('lang-dropdown');
+        const langBtn = document.getElementById('lang-btn');
+        const currentLangText = document.getElementById('current-lang-text');
+        const langItems = document.querySelectorAll('.dropdown-menu li');
+
+        langBtn.addEventListener('click', () => { dropdown.classList.toggle('open'); });
+
+        document.addEventListener('click', (e) => {
+            if (!dropdown.contains(e.target)) dropdown.classList.remove('open');
+        });
+
         function setLanguage(lang) {
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
                 if (translations[lang] && translations[lang][key]) {
-                    el.textContent = translations[lang][key];
+                    el.innerHTML = translations[lang][key];
                 }
             });
+            currentLangText.textContent = translations[lang].name;
             localStorage.setItem('portfolio_lang', lang);
         }
 
         const savedLang = localStorage.getItem('portfolio_lang') || 'en';
-        langSwitch.value = savedLang;
         setLanguage(savedLang);
 
-        langSwitch.addEventListener('change', (e) => setLanguage(e.target.value));
+        langItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const selectedLang = item.getAttribute('data-value');
+                setLanguage(selectedLang);
+                dropdown.classList.remove('open');
+            });
+        });
 
         const themeSwitch = document.getElementById('theme-switch');
         const root = document.documentElement;
