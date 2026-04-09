@@ -4,15 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jurabek Turaev | AI Engineer</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
     <style>
         :root {
             --bg-color: #0f111a;
+            --glass-bg: rgba(30, 33, 50, 0.6);
             --text-color: #8f93a2;
             --heading-color: #fffffe;
             --accent-color: #82aaff;
-            --card-bg: #1e2132;
-            --border-color: #2b2f42;
+            --border-color: rgba(255, 255, 255, 0.1);
         }
+
+        [data-theme="light"] {
+            --bg-color: #f0f2f5;
+            --glass-bg: rgba(255, 255, 255, 0.7);
+            --text-color: #4a4a4a;
+            --heading-color: #1a1a1a;
+            --accent-color: #2962ff;
+            --border-color: rgba(0, 0, 0, 0.1);
+        }
+
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background-color: var(--bg-color);
@@ -20,109 +31,87 @@
             margin: 0;
             padding: 0;
             line-height: 1.7;
+            transition: background-color 0.3s, color 0.3s;
+            overflow-x: hidden;
         }
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 2rem;
+
+        #bg-canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; }
+
+        .controls { position: fixed; top: 20px; right: 20px; display: flex; gap: 15px; z-index: 100; }
+        .controls select, .controls button {
+            background: var(--glass-bg); color: var(--heading-color); border: 1px solid var(--border-color);
+            padding: 8px 15px; border-radius: 20px; cursor: pointer; backdrop-filter: blur(10px);
+            font-family: inherit; outline: none; transition: 0.3s;
         }
-        header {
-            text-align: center;
-            padding: 4rem 2rem 3rem;
-            background-color: var(--card-bg);
-            border-bottom: 1px solid var(--border-color);
-            border-radius: 0 0 15px 15px;
-            margin-bottom: 3rem;
+        .controls button:hover, .controls select:hover { border-color: var(--accent-color); }
+
+        .glass-container {
+            max-width: 900px; margin: 4rem auto; background: var(--glass-bg);
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--border-color); border-radius: 20px; padding: 3rem;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
         }
+        @media (max-width: 768px) {
+            .glass-container { margin: 1rem; padding: 1.5rem; }
+            .controls { top: 10px; right: 10px; }
+        }
+
+        header { text-align: center; padding-bottom: 2rem; border-bottom: 1px solid var(--border-color); margin-bottom: 2rem; }
         h1, h2, h3, h4 { color: var(--heading-color); margin-top: 0; }
         h1 { font-size: 2.8rem; margin-bottom: 5px; }
         h2 { font-size: 1.5rem; color: var(--accent-color); font-weight: 500; margin-bottom: 20px;}
         
-        .contact-info {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 15px;
-            font-size: 0.95rem;
-        }
+        .contact-info { display: flex; justify-content: center; flex-wrap: wrap; gap: 15px; font-size: 0.95rem; }
         .contact-info a, .contact-info span {
-            color: var(--text-color);
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            background: var(--bg-color);
-            padding: 5px 15px;
-            border-radius: 20px;
-            border: 1px solid var(--border-color);
+            color: var(--text-color); text-decoration: none; display: flex; align-items: center; gap: 5px;
+            background: rgba(0,0,0,0.1); padding: 5px 15px; border-radius: 20px; border: 1px solid var(--border-color);
         }
         .contact-info a:hover { color: var(--accent-color); border-color: var(--accent-color); }
 
-        .section-title {
-            font-size: 1.8rem;
-            border-bottom: 2px solid var(--border-color);
-            padding-bottom: 10px;
-            margin-bottom: 25px;
-            display: inline-block;
-        }
-        
-        /* Grid Layouts */
-        .grid-2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
+        .section-title { font-size: 1.8rem; border-bottom: 2px solid var(--border-color); padding-bottom: 10px; margin-bottom: 25px; display: inline-block; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         @media (max-width: 768px) { .grid-2 { grid-template-columns: 1fr; } }
 
-        /* Cards & Items */
-        .card {
-            background-color: var(--card-bg);
-            padding: 1.8rem;
-            border-radius: 10px;
-            margin-bottom: 1.5rem;
-            border: 1px solid var(--border-color);
-            transition: transform 0.2s;
-        }
+        .card { background: rgba(0,0,0,0.05); padding: 1.8rem; border-radius: 10px; margin-bottom: 1.5rem; border: 1px solid var(--border-color); transition: transform 0.2s; }
         .card:hover { transform: translateY(-3px); border-color: var(--accent-color); }
-        .card-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; flex-wrap: wrap;}
-        .card-header h3 { margin: 0; font-size: 1.3rem;}
-        .date-badge { background: var(--bg-color); padding: 4px 10px; border-radius: 5px; font-size: 0.85rem; border: 1px solid var(--border-color);}
+        .card-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;}
+        .card-header h3 { margin-bottom: 5px; }
+        .date-badge { background: var(--bg-color); padding: 4px 10px; border-radius: 5px; font-size: 0.85rem; border: 1px solid var(--border-color); height: fit-content;}
 
-        /* Skills */
         .skills-container { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 2rem;}
-        .skill-tag {
-            background-color: rgba(130, 170, 255, 0.1);
-            color: var(--accent-color);
-            padding: 8px 16px;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            border: 1px solid rgba(130, 170, 255, 0.2);
-        }
-
-        /* Languages */
+        .skill-tag { background-color: rgba(130, 170, 255, 0.1); color: var(--accent-color); padding: 8px 16px; border-radius: 8px; font-size: 0.9rem; border: 1px solid rgba(130, 170, 255, 0.2); }
         .lang-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px dashed var(--border-color); }
         .lang-item:last-child { border-bottom: none; }
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="container">
+    <canvas id="bg-canvas"></canvas>
+
+    <nav class="controls">
+        <select id="lang-switch">
+            <option value="en">English</option>
+            <option value="ru">Русский</option>
+            <option value="uz">O'zbek</option>
+        </select>
+        <button id="theme-switch" title="Tema o'zgartirish">🌓</button>
+    </nav>
+
+    <div class="glass-container">
+        <header>
             <h1>Jurabek Turaev</h1>
-            <h2>AI Engineer</h2>
+            <h2 data-i18n="role">AI Engineer</h2>
             <div class="contact-info">
-                <span>📍 Tashkent, Uzbekistan</span>
+                <span data-i18n="location">📍 Tashkent, Uzbekistan</span>
                 <a href="mailto:torayevjorabek833@gmail.com">✉️ torayevjorabek833@gmail.com</a>
                 <a href="tel:+998907615171">📞 +998 90 761 51 71</a>
                 <a href="#" target="_blank">🔗 LinkedIn</a>
                 <a href="https://github.com/jurabek-turaev" target="_blank">💻 GitHub</a>
             </div>
-        </div>
-    </header>
+        </header>
 
-    <div class="container">
         <section id="skills">
-            <h2 class="section-title">Texnologiyalar va Ko'nikmalar</h2>
+            <h2 class="section-title" data-i18n="skills_title">Technologies & Skills</h2>
             <div class="skills-container">
                 <span class="skill-tag">Python</span>
                 <span class="skill-tag">Langchain</span>
@@ -141,69 +130,224 @@
 
         <div class="grid-2">
             <section id="experience">
-                <h2 class="section-title">Ish Tajribasi</h2>
+                <h2 class="section-title" data-i18n="exp_title">Experience</h2>
                 <div class="card">
                     <div class="card-header">
-                        <h3>AI Engineer <br><span style="font-size: 1rem; font-weight: normal; color: var(--text-color);">Tenzorsoft | Tashkent, Uzbekistan</span></h3>
-                        <span class="date-badge">08/2025 - Hozirgacha</span>
+                        <div>
+                            <h3 data-i18n="exp_role">AI Engineer</h3>
+                            <div style="font-size: 0.95rem; color: var(--text-color);" data-i18n="exp_company">Tenzorsoft | Tashkent, Uzbekistan</div>
+                        </div>
+                        <span class="date-badge" data-i18n="exp_date">08/2025 - Present</span>
                     </div>
-                    <p>O'zbekiston kimyo sanoati uchun LangGraph freymvorki yordamida sun'iy intellekt ish oqimi (AI workflow) ishlab chiqish.</p>
+                    <p data-i18n="exp_desc">Created an AI workflow with langgraph framework for Chemical industry of Uzbekistan.</p>
                 </div>
             </section>
 
             <section id="education">
-                <h2 class="section-title">Ta'lim</h2>
+                <h2 class="section-title" data-i18n="edu_title">Education</h2>
                 <div class="card">
                     <div class="card-header">
-                        <h3>Bakalavr: Agrobiznes va Raqamli Iqtisodiyot <br><span style="font-size: 1rem; font-weight: normal; color: var(--text-color);">Andijon Qishloq Xo'jaligi va Agrotexnologiyalar Instituti</span></h3>
+                        <div>
+                            <h3 data-i18n="edu_degree">Bachelor: Agribusiness and Digital Economy</h3>
+                            <div style="font-size: 0.95rem; color: var(--text-color);" data-i18n="edu_uni">Andijan Institute of Agriculture and Agrotechnologies</div>
+                        </div>
                         <span class="date-badge">08/2021 - 05/2025</span>
                     </div>
                 </div>
 
                 <div class="card">
-                    <h3 style="margin-bottom: 10px;">Tillar</h3>
-                    <div class="lang-item"><span>🇺🇿 O'zbek tili</span> <span style="color: var(--heading-color);">Ona tili</span></div>
-                    <div class="lang-item"><span>🇬🇧 Ingliz tili</span> <span style="color: var(--heading-color);">B2 (CEFR)</span></div>
-                    <div class="lang-item"><span>🇷🇺 Rus tili</span> <span style="color: var(--heading-color);">B1</span></div>
+                    <h3 style="margin-bottom: 10px;" data-i18n="lang_title">Languages</h3>
+                    <div class="lang-item"><span data-i18n="lang_uz">UZ Uzbek</span> <span style="color: var(--heading-color);" data-i18n="lang_native">Native</span></div>
+                    <div class="lang-item"><span data-i18n="lang_en">EN English</span> <span style="color: var(--heading-color);">B2 (CEFR)</span></div>
+                    <div class="lang-item"><span data-i18n="lang_ru">RU Russian</span> <span style="color: var(--heading-color);">B1</span></div>
                 </div>
             </section>
         </div>
 
         <section id="projects" style="margin-top: 2rem;">
-            <h2 class="section-title">Asosiy Loyihalar</h2>
+            <h2 class="section-title" data-i18n="proj_title">Projects</h2>
             
             <div class="card">
                 <h3>AI Chatbot for Chemical Industry</h3>
-                <p>O'zbekiston kimyo sanoati platformasi uchun foydalanuvchilarga biznesga oid savollarni tabiiy tilda berish va tezkor, ma'lumotlarga asoslangan javoblar olish imkonini beruvchi AI yordamchi.</p>
+                <p data-i18n="p1_desc">We built an AI assistant for the Uzbekistan's Chemical Industry platform to let users ask business questions in natural language and get data-driven answers instantly.</p>
                 <ul>
-                    <li>Foydalanuvchi maqsadini aniqlash, LLM orqali SQL generatsiya qilish, PostgreSQL'da so'rovlarni bajarish va aniq javoblar tayyorlash uchun <b>LangGraph</b> ish oqimidan foydalanilgan.</li>
-                    <li>Sotuvlar, qarzlar, shartnomalar, ombor qoldiqlari va tashkilot darajasidagi metrikalar tahlili uchun mo'ljallangan.</li>
-                    <li><b>FastAPI</b> orqali sessiyaga asoslangan xotira va tashkilotga xos kontekst yaratildi. Jadvalli ma'lumotlarni strukturali chiqarish va ko'p tilli javob qaytarish joriy etildi.</li>
+                    <li data-i18n="p1_l1">Uses a LangGraph workflow to classify user intent, generate SQL with LLM, execute queries on PostgreSQL, and produce clear final responses.</li>
+                    <li data-i18n="p1_l2">Designed for enterprise analytics, including sales lots, debts, contracts, warehouse balances, and operational metrics.</li>
+                    <li data-i18n="p1_l3">Backend implemented with FastAPI, session-based chat memory, structured table output, and multilingual response handling.</li>
                 </ul>
             </div>
 
             <div class="card">
                 <h3>AI Lawyer</h3>
-                <p>O'zbekiston qonunchiligiga asoslangan, FastAPI backend va Streamlit interfeysiga ega bo'lgan AI yordamida shartnomalarni tahlil qilish platformasi.</p>
+                <p data-i18n="p2_desc">Built an AI-powered legal contract analysis platform focused on Uzbekistan legislation, with a FastAPI backend and Streamlit interface.</p>
                 <ul>
-                    <li>PDF, DOCX va TXT shartnomalarni qayta ishlaydi, matn va jadvallarni ajratib oladi va ularni huquqiy muvofiqlik, huquqbuzarliklar va potensial xavflar bo'yicha baholaydi.</li>
-                    <li>Mahalliy qonunlarga asoslangan aniq javoblar berish uchun <b>LangChain, Chroma va Gemini</b> yordamida <b>RAG (Retrieval-Augmented Generation)</b> tizimi qurildi.</li>
-                    <li>Jonli veb-qidiruv orqali bozor narxlarini solishtirish va javobda manba (link) larni taqdim etish funksiyasi mavjud.</li>
+                    <li data-i18n="p2_l1">Processes PDF, DOCX, and TXT contracts to evaluate legal compliance, rights violations, and potential risks.</li>
+                    <li data-i18n="p2_l2">Implemented a RAG pipeline using LangChain, Chroma, and Gemini embeddings over local laws.</li>
+                    <li data-i18n="p2_l3">Performs market-price benchmarking via live web search and delivers decision-ready summaries.</li>
                 </ul>
             </div>
 
             <div class="card">
                 <h3>Face Matching with AI</h3>
-                <p>Tanishinguv (dating) platformalarida profillarni tasdiqlash va soxta akkauntlarni kamaytirish uchun mo'ljallangan yuzni tanish va solishtirish API'si.</p>
+                <p data-i18n="p3_desc">A face-matching API designed for dating-style platforms to help verify profiles and reduce fake or duplicate accounts.</p>
                 <ul>
-                    <li><b>Python va FastAPI</b> yordamida qurilgan. Yuz xususiyatlarini ajratib olish va kosinus o'xshashligi (cosine similarity) bilan solishtirish uchun <b>InsightFace (ArcFace) va ONNX Runtime</b> ishlatildi.</li>
-                    <li>Ikkita rasm URL manzilini qabul qilib, ularni yuklab oladi, formatlaydi va aniq o'xshashlik foizini qaytaradi.</li>
-                    <li>Loyihani istalgan joyda tez ishga tushirish uchun <b>Docker</b> orqali konteynerizatsiya qilindi va Uvicorn orqali serverga qo'yildi.</li>
+                    <li data-i18n="p3_l1">Built with Python, FastAPI, InsightFace (ArcFace), and ONNX Runtime to extract facial embeddings and compare cosine similarity.</li>
+                    <li data-i18n="p3_l2">Takes image URLs, preprocesses them, detects faces, and returns a clear similarity percentage.</li>
+                    <li data-i18n="p3_l3">Containerized with Docker and served via Uvicorn for a lightweight, production-ready backend.</li>
                 </ul>
             </div>
-
         </section>
     </div>
 
+    <script>
+        const translations = {
+            en: {
+                role: "AI Engineer", location: "📍 Tashkent, Uzbekistan",
+                skills_title: "Technologies & Skills", exp_title: "Experience",
+                exp_role: "AI Engineer", exp_company: "Tenzorsoft | Tashkent, Uzbekistan",
+                exp_date: "08/2025 - Present", exp_desc: "Created an AI workflow with langgraph framework for Chemical industry of Uzbekistan.",
+                edu_title: "Education", edu_degree: "Bachelor: Agribusiness and Digital Economy",
+                edu_uni: "Andijan Institute of Agriculture and Agrotechnologies",
+                lang_title: "Languages", lang_uz: "UZ Uzbek", lang_en: "EN English", lang_ru: "RU Russian", lang_native: "Native",
+                proj_title: "Projects",
+                p1_desc: "We built an AI assistant for the Uzbekistan's Chemical Industry platform to let users ask business questions in natural language and get data-driven answers instantly.",
+                p1_l1: "Uses a LangGraph workflow to classify user intent, generate SQL with LLM, execute queries on PostgreSQL, and produce clear final responses.",
+                p1_l2: "Designed for enterprise analytics, including sales lots, debts, contracts, warehouse balances, and operational metrics.",
+                p1_l3: "Backend implemented with FastAPI, session-based chat memory, structured table output, and multilingual response handling.",
+                p2_desc: "Built an AI-powered legal contract analysis platform focused on Uzbekistan legislation, with a FastAPI backend and Streamlit interface.",
+                p2_l1: "Processes PDF, DOCX, and TXT contracts to evaluate legal compliance, rights violations, and potential risks.",
+                p2_l2: "Implemented a RAG pipeline using LangChain, Chroma, and Gemini embeddings over local laws.",
+                p2_l3: "Performs market-price benchmarking via live web search and delivers decision-ready summaries.",
+                p3_desc: "A face-matching API designed for dating-style platforms to help verify profiles and reduce fake or duplicate accounts.",
+                p3_l1: "Built with Python, FastAPI, InsightFace (ArcFace), and ONNX Runtime to extract facial embeddings and compare cosine similarity.",
+                p3_l2: "Takes image URLs, preprocesses them, detects faces, and returns a clear similarity percentage.",
+                p3_l3: "Containerized with Docker and served via Uvicorn for a lightweight, production-ready backend."
+            },
+            uz: {
+                role: "AI Muhandisi", location: "📍 Toshkent, O'zbekiston",
+                skills_title: "Texnologiyalar va Ko'nikmalar", exp_title: "Ish Tajribasi",
+                exp_role: "AI Muhandisi", exp_company: "Tenzorsoft | Toshkent, O'zbekiston",
+                exp_date: "08/2025 - Hozirgacha", exp_desc: "O'zbekiston kimyo sanoati uchun LangGraph yordamida AI ish oqimini (workflow) yaratdi.",
+                edu_title: "Ta'lim", edu_degree: "Bakalavr: Agrobiznes va Raqamli Iqtisodiyot",
+                edu_uni: "Andijon Qishloq Xo'jaligi va Agrotexnologiyalar Instituti",
+                lang_title: "Tillar", lang_uz: "UZ O'zbek tili", lang_en: "EN Ingliz tili", lang_ru: "RU Rus tili", lang_native: "Ona tili",
+                proj_title: "Asosiy Loyihalar",
+                p1_desc: "O'zbekiston kimyo sanoati platformasi uchun biznes savollarga tabiiy tilda ma'lumotlarga asoslangan javob beruvchi AI yordamchi.",
+                p1_l1: "Foydalanuvchi maqsadini aniqlash, LLM orqali SQL yozish va PostgreSQL'da so'rovlarni bajarish uchun LangGraph ish oqimi qo'llanildi.",
+                p1_l2: "Korxona tahliliy ma'lumotlari: sotuvlar, qarzlar, shartnomalar va ombor qoldiqlarini hisoblash uchun mo'ljallangan.",
+                p1_l3: "FastAPI asosida sessiyali xotira, jadval formatidagi javoblar va ko'p tilli qo'llab-quvvatlash joriy etildi.",
+                p2_desc: "O'zbekiston qonunchiligiga asoslangan yuridik shartnomalarni tahlil qiluvchi, FastAPI va Streamlit interfeysiga ega AI platforma.",
+                p2_l1: "PDF, DOCX va TXT fayllarni qayta ishlab, huquqiy moslik va ehtimoliy xavflarni baholaydi.",
+                p2_l2: "Mahalliy qonunlar bazasida LangChain, Chroma va Gemini yordamida RAG tizimi qurildi.",
+                p2_l3: "Jonli veb qidiruv orqali bozor narxlarini solishtiradi va yakuniy qaror xulosalarini taqdim etadi.",
+                p3_desc: "Tanishuv (dating) platformalarida akkauntlarni tasdiqlash uchun yuz o'xshashligini aniqlovchi API.",
+                p3_l1: "Python, FastAPI, InsightFace va ONNX Runtime yordamida yuz belgilarini ajratish va kosinus o'xshashligini hisoblash tizimi.",
+                p3_l2: "Rasm URL manzilini olib, yuzni aniqlaydi va o'xshashlik foizini qaytaradi.",
+                p3_l3: "Loyiha Docker yordamida konteynerizatsiya qilindi va ishlab chiqarishga (production) tayyorlandi."
+            },
+            ru: {
+                role: "AI Инженер", location: "📍 Ташкент, Узбекистан",
+                skills_title: "Технологии и Навыки", exp_title: "Опыт работы",
+                exp_role: "AI Инженер", exp_company: "Tenzorsoft | Ташкент, Узбекистан",
+                exp_date: "08/2025 - Настоящее время", exp_desc: "Создал рабочий процесс ИИ с использованием LangGraph для химической промышленности Узбекистана.",
+                edu_title: "Образование", edu_degree: "Бакалавр: Агробизнес и Цифровая Экономика",
+                edu_uni: "Андижанский институт сельского хозяйства и агротехнологий",
+                lang_title: "Языки", lang_uz: "UZ Узбекский", lang_en: "EN Английский", lang_ru: "RU Русский", lang_native: "Родной",
+                proj_title: "Проекты",
+                p1_desc: "Разработан ИИ-помощник для платформы Химической промышленности РУз, позволяющий задавать бизнес-вопросы на естественном языке.",
+                p1_l1: "Использует LangGraph для классификации намерений, генерации SQL и выполнения запросов в PostgreSQL.",
+                p1_l2: "Разработан для корпоративной аналитики: продажи, долги, контракты и складские остатки.",
+                p1_l3: "Бэкенд на FastAPI с памятью сессий, структурированным выводом таблиц и мультиязычностью.",
+                p2_desc: "Платформа анализа юридических контрактов на основе ИИ с учетом законодательства РУз (FastAPI + Streamlit).",
+                p2_l1: "Обрабатывает контракты PDF, DOCX и TXT для оценки юридического соответствия и рисков.",
+                p2_l2: "Реализована архитектура RAG с использованием LangChain, Chroma и Gemini по локальным законам.",
+                p2_l3: "Выполняет бенчмаркинг рыночных цен через веб-поиск и выдает готовые к решениям резюме.",
+                p3_desc: "API для распознавания лиц для платформ знакомств, помогающий верифицировать профили.",
+                p3_l1: "Создан на Python, FastAPI, InsightFace и ONNX Runtime для сравнения лиц с помощью косинусного сходства.",
+                p3_l2: "Принимает URL изображений, обрабатывает их и возвращает процент сходства.",
+                p3_l3: "Контейнеризован с помощью Docker для быстрого и надежного развертывания."
+            }
+        };
+
+        // Yaxshilangan va xatosiz tarjima mantiqi
+        const langSwitch = document.getElementById('lang-switch');
+        function setLanguage(lang) {
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[lang] && translations[lang][key]) {
+                    el.textContent = translations[lang][key];
+                }
+            });
+            localStorage.setItem('portfolio_lang', lang);
+        }
+
+        const savedLang = localStorage.getItem('portfolio_lang') || 'en';
+        langSwitch.value = savedLang;
+        setLanguage(savedLang);
+
+        langSwitch.addEventListener('change', (e) => setLanguage(e.target.value));
+
+        const themeSwitch = document.getElementById('theme-switch');
+        const root = document.documentElement;
+        const savedTheme = localStorage.getItem('portfolio_theme') || 'dark';
+        if (savedTheme === 'light') root.setAttribute('data-theme', 'light');
+
+        themeSwitch.addEventListener('click', () => {
+            if (root.getAttribute('data-theme') === 'light') {
+                root.removeAttribute('data-theme');
+                localStorage.setItem('portfolio_theme', 'dark');
+            } else {
+                root.setAttribute('data-theme', 'light');
+                localStorage.setItem('portfolio_theme', 'light');
+            }
+        });
+
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height, particles = [];
+        
+        function resizeCanvas() { width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * width; this.y = Math.random() * height;
+                this.vx = (Math.random() - 0.5) * 0.5; this.vy = (Math.random() - 0.5) * 0.5;
+                this.radius = Math.random() * 2 + 1;
+            }
+            update() {
+                this.x += this.vx; this.y += this.vy;
+                if (this.x < 0 || this.x > width) this.vx *= -1;
+                if (this.y < 0 || this.y > height) this.vy *= -1;
+            }
+            draw() {
+                ctx.beginPath(); ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+                ctx.fillStyle = isLight ? 'rgba(41, 98, 255, 0.5)' : 'rgba(130, 170, 255, 0.5)'; ctx.fill();
+            }
+        }
+
+        for (let i = 0; i < 80; i++) particles.push(new Particle());
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update(); particles[i].draw();
+                for (let j = i; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x, dy = particles[i].y - particles[j].y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    if (distance < 120) {
+                        ctx.beginPath();
+                        ctx.strokeStyle = isLight ? `rgba(41, 98, 255, ${0.15 - distance/800})` : `rgba(130, 170, 255, ${0.15 - distance/800})`;
+                        ctx.lineWidth = 1; ctx.moveTo(particles[i].x, particles[i].y); ctx.lineTo(particles[j].x, particles[j].y); ctx.stroke();
+                    }
+                }
+            }
+            requestAnimationFrame(animate);
+        }
+        animate();
+    </script>
 </body>
 </html>
