@@ -3,108 +3,205 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jurabek Turaev | Portfolio</title>
+    <title>Jurabek Turaev | AI Engineer</title>
     <style>
         :root {
-            --bg-color: #121212;
-            --text-color: #e0e0e0;
-            --accent-color: #00ff88;
-            --card-bg: #1e1e1e;
+            --bg-color: #0f111a;
+            --text-color: #8f93a2;
+            --heading-color: #fffffe;
+            --accent-color: #82aaff;
+            --card-bg: #1e2132;
+            --border-color: #2b2f42;
         }
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
             margin: 0;
             padding: 0;
-            line-height: 1.6;
+            line-height: 1.7;
         }
-        header {
-            text-align: center;
-            padding: 4rem 2rem;
-            background-color: var(--card-bg);
-            border-bottom: 2px solid var(--accent-color);
-        }
-        h1 { margin: 0; font-size: 2.5rem; }
-        h2 { color: var(--accent-color); margin-top: 10px;}
         .container {
             max-width: 900px;
             margin: 0 auto;
             padding: 2rem;
         }
-        .section-title {
-            border-bottom: 1px solid #333;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
+        header {
+            text-align: center;
+            padding: 4rem 2rem 3rem;
+            background-color: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+            border-radius: 0 0 15px 15px;
+            margin-bottom: 3rem;
         }
-        .skills {
+        h1, h2, h3, h4 { color: var(--heading-color); margin-top: 0; }
+        h1 { font-size: 2.8rem; margin-bottom: 5px; }
+        h2 { font-size: 1.5rem; color: var(--accent-color); font-weight: 500; margin-bottom: 20px;}
+        
+        .contact-info {
             display: flex;
+            justify-content: center;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 15px;
+            font-size: 0.95rem;
         }
-        .skill-tag {
-            background-color: var(--card-bg);
-            padding: 8px 15px;
-            border-radius: 5px;
-            border: 1px solid #333;
-            font-size: 0.9rem;
+        .contact-info a, .contact-info span {
+            color: var(--text-color);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background: var(--bg-color);
+            padding: 5px 15px;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
         }
-        .project-card {
+        .contact-info a:hover { color: var(--accent-color); border-color: var(--accent-color); }
+
+        .section-title {
+            font-size: 1.8rem;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+            display: inline-block;
+        }
+        
+        /* Grid Layouts */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        @media (max-width: 768px) { .grid-2 { grid-template-columns: 1fr; } }
+
+        /* Cards & Items */
+        .card {
             background-color: var(--card-bg);
-            padding: 1.5rem;
-            border-radius: 8px;
+            padding: 1.8rem;
+            border-radius: 10px;
             margin-bottom: 1.5rem;
-            border-left: 4px solid var(--accent-color);
+            border: 1px solid var(--border-color);
+            transition: transform 0.2s;
         }
-        .project-card h3 { margin-top: 0; }
-        a { color: var(--accent-color); text-decoration: none; }
-        a:hover { text-decoration: underline; }
+        .card:hover { transform: translateY(-3px); border-color: var(--accent-color); }
+        .card-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; flex-wrap: wrap;}
+        .card-header h3 { margin: 0; font-size: 1.3rem;}
+        .date-badge { background: var(--bg-color); padding: 4px 10px; border-radius: 5px; font-size: 0.85rem; border: 1px solid var(--border-color);}
+
+        /* Skills */
+        .skills-container { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 2rem;}
+        .skill-tag {
+            background-color: rgba(130, 170, 255, 0.1);
+            color: var(--accent-color);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            border: 1px solid rgba(130, 170, 255, 0.2);
+        }
+
+        /* Languages */
+        .lang-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px dashed var(--border-color); }
+        .lang-item:last-child { border-bottom: none; }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>Jurabek Turaev</h1>
-        <h2>Backend Developer & Software Engineer</h2>
-        <p>Python | FastAPI | Docker | PostgreSQL</p>
+        <div class="container">
+            <h1>Jurabek Turaev</h1>
+            <h2>AI Engineer</h2>
+            <div class="contact-info">
+                <span>📍 Tashkent, Uzbekistan</span>
+                <a href="mailto:torayevjorabek833@gmail.com">✉️ torayevjorabek833@gmail.com</a>
+                <a href="tel:+998907615171">📞 +998 90 761 51 71</a>
+                <a href="#" target="_blank">🔗 LinkedIn</a>
+                <a href="https://github.com/jurabek-turaev" target="_blank">💻 GitHub</a>
+            </div>
+        </div>
     </header>
 
     <div class="container">
-        <section id="about">
-            <h2 class="section-title">Men haqimda</h2>
-            <p>Salom! Men asosan Python ekotizimida backend xizmatlar, ma'lumotlar bazalari va murakkab Telegram botlar ishlab chiqishga ixtisoslashgan dasturchiman. Serverlar bilan ishlash, Docker yordamida loyihalarni konteynerizatsiya qilish va AI vositalarini integratsiya qilish bo'yicha tajribaga egaman.</p>
-        </section>
-
         <section id="skills">
             <h2 class="section-title">Texnologiyalar va Ko'nikmalar</h2>
-            <div class="skills">
+            <div class="skills-container">
                 <span class="skill-tag">Python</span>
+                <span class="skill-tag">Langchain</span>
+                <span class="skill-tag">Langgraph</span>
+                <span class="skill-tag">LLM / RAG</span>
+                <span class="skill-tag">PyTorch</span>
+                <span class="skill-tag">Scikit-learn</span>
                 <span class="skill-tag">FastAPI</span>
-                <span class="skill-tag">Docker / Docker Compose</span>
                 <span class="skill-tag">PostgreSQL</span>
-                <span class="skill-tag">aiogram / Telethon</span>
-                <span class="skill-tag">Oracle Cloud</span>
+                <span class="skill-tag">Docker</span>
                 <span class="skill-tag">Git</span>
+                <span class="skill-tag">N8N</span>
+                <span class="skill-tag">Linux</span>
             </div>
         </section>
 
-        <section id="projects">
-            <h2 class="section-title">Tanlangan Loyihalar</h2>
+        <div class="grid-2">
+            <section id="experience">
+                <h2 class="section-title">Ish Tajribasi</h2>
+                <div class="card">
+                    <div class="card-header">
+                        <h3>AI Engineer <br><span style="font-size: 1rem; font-weight: normal; color: var(--text-color);">Tenzorsoft | Tashkent, Uzbekistan</span></h3>
+                        <span class="date-badge">08/2025 - Hozirgacha</span>
+                    </div>
+                    <p>O'zbekiston kimyo sanoati uchun LangGraph freymvorki yordamida sun'iy intellekt ish oqimi (AI workflow) ishlab chiqish.</p>
+                </div>
+            </section>
+
+            <section id="education">
+                <h2 class="section-title">Ta'lim</h2>
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Bakalavr: Agrobiznes va Raqamli Iqtisodiyot <br><span style="font-size: 1rem; font-weight: normal; color: var(--text-color);">Andijon Qishloq Xo'jaligi va Agrotexnologiyalar Instituti</span></h3>
+                        <span class="date-badge">08/2021 - 05/2025</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 style="margin-bottom: 10px;">Tillar</h3>
+                    <div class="lang-item"><span>🇺🇿 O'zbek tili</span> <span style="color: var(--heading-color);">Ona tili</span></div>
+                    <div class="lang-item"><span>🇬🇧 Ingliz tili</span> <span style="color: var(--heading-color);">B2 (CEFR)</span></div>
+                    <div class="lang-item"><span>🇷🇺 Rus tili</span> <span style="color: var(--heading-color);">B1</span></div>
+                </div>
+            </section>
+        </div>
+
+        <section id="projects" style="margin-top: 2rem;">
+            <h2 class="section-title">Asosiy Loyihalar</h2>
             
-            <div class="project-card">
-                <h3>Instube Downloader</h3>
-                <p>Instagram va YouTube platformalaridan media fayllarni yuklab beruvchi Telegram bot. Loyiha yt-dlp yordamida ishlangan va Docker yordamida to'liq konteynerizatsiya qilingan.</p>
+            <div class="card">
+                <h3>AI Chatbot for Chemical Industry</h3>
+                <p>O'zbekiston kimyo sanoati platformasi uchun foydalanuvchilarga biznesga oid savollarni tabiiy tilda berish va tezkor, ma'lumotlarga asoslangan javoblar olish imkonini beruvchi AI yordamchi.</p>
+                <ul>
+                    <li>Foydalanuvchi maqsadini aniqlash, LLM orqali SQL generatsiya qilish, PostgreSQL'da so'rovlarni bajarish va aniq javoblar tayyorlash uchun <b>LangGraph</b> ish oqimidan foydalanilgan.</li>
+                    <li>Sotuvlar, qarzlar, shartnomalar, ombor qoldiqlari va tashkilot darajasidagi metrikalar tahlili uchun mo'ljallangan.</li>
+                    <li><b>FastAPI</b> orqali sessiyaga asoslangan xotira va tashkilotga xos kontekst yaratildi. Jadvalli ma'lumotlarni strukturali chiqarish va ko'p tilli javob qaytarish joriy etildi.</li>
+                </ul>
             </div>
 
-            <div class="project-card">
-                <h3>Kimyosanoat-AI</h3>
-                <p>FastAPI va PostgreSQL asosida yozilgan backend xizmati. Ma'lumotlar bazasiga SSH tunnellar orqali xavfsiz ulanish va ma'lumotlarni qayta ishlash logikasi joriy qilingan.</p>
+            <div class="card">
+                <h3>AI Lawyer</h3>
+                <p>O'zbekiston qonunchiligiga asoslangan, FastAPI backend va Streamlit interfeysiga ega bo'lgan AI yordamida shartnomalarni tahlil qilish platformasi.</p>
+                <ul>
+                    <li>PDF, DOCX va TXT shartnomalarni qayta ishlaydi, matn va jadvallarni ajratib oladi va ularni huquqiy muvofiqlik, huquqbuzarliklar va potensial xavflar bo'yicha baholaydi.</li>
+                    <li>Mahalliy qonunlarga asoslangan aniq javoblar berish uchun <b>LangChain, Chroma va Gemini</b> yordamida <b>RAG (Retrieval-Augmented Generation)</b> tizimi qurildi.</li>
+                    <li>Jonli veb-qidiruv orqali bozor narxlarini solishtirish va javobda manba (link) larni taqdim etish funksiyasi mavjud.</li>
+                </ul>
             </div>
 
-            <div class="project-card">
-                <h3>AI Qidiruv Tizimi</h3>
-                <p>Trie, N-gram va SymSpell algoritmlari yordamida ishlaydigan real-vaqt rejimida qidiruv so'zlarini taklif qiluvchi (autocomplete) tizim API'si.</p>
+            <div class="card">
+                <h3>Face Matching with AI</h3>
+                <p>Tanishinguv (dating) platformalarida profillarni tasdiqlash va soxta akkauntlarni kamaytirish uchun mo'ljallangan yuzni tanish va solishtirish API'si.</p>
+                <ul>
+                    <li><b>Python va FastAPI</b> yordamida qurilgan. Yuz xususiyatlarini ajratib olish va kosinus o'xshashligi (cosine similarity) bilan solishtirish uchun <b>InsightFace (ArcFace) va ONNX Runtime</b> ishlatildi.</li>
+                    <li>Ikkita rasm URL manzilini qabul qilib, ularni yuklab oladi, formatlaydi va aniq o'xshashlik foizini qaytaradi.</li>
+                    <li>Loyihani istalgan joyda tez ishga tushirish uchun <b>Docker</b> orqali konteynerizatsiya qilindi va Uvicorn orqali serverga qo'yildi.</li>
+                </ul>
             </div>
+
         </section>
     </div>
 
