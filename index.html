@@ -66,7 +66,6 @@
         }
         .dropdown-menu li:hover { background: rgba(130, 170, 255, 0.15); color: var(--accent-color); }
 
-        /* Bayroqlar uchun stil */
         .flag-icon { width: 20px; height: 14px; border-radius: 2px; object-fit: cover; box-shadow: 0 1px 3px rgba(0,0,0,0.2);}
 
         #theme-switch { width: 42px; height: 42px; padding: 0; position: relative; overflow: hidden; }
@@ -113,7 +112,7 @@
         .card-header h3 { margin-bottom: 5px; }
         .date-badge { background: var(--bg-color); padding: 4px 10px; border-radius: 5px; font-size: 0.85rem; border: 1px solid var(--border-color); height: fit-content;}
 
-        .skills-container { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 2rem;}
+        .skills-container { display: flex; flex-wrap: wrap; gap: 10px; }
         .skill-tag { background-color: rgba(130, 170, 255, 0.1); color: var(--accent-color); padding: 8px 16px; border-radius: 8px; font-size: 0.9rem; border: 1px solid rgba(130, 170, 255, 0.2); }
         .lang-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px dashed var(--border-color); }
         .lang-item:last-child { border-bottom: none; }
@@ -131,7 +130,7 @@
                 <svg class="chevron" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
             </button>
             <ul class="dropdown-menu">
-                <li data-value="en"><img src="https://flagcdn.com/w20/us.png" class="flag-icon" alt="EN"> English</li>
+                <li data-value="en"><img src="https://flagcdn.com/w20/gb.png" class="flag-icon" alt="EN"> English</li>
                 <li data-value="ru"><img src="https://flagcdn.com/w20/ru.png" class="flag-icon" alt="RU"> Русский</li>
                 <li data-value="uz"><img src="https://flagcdn.com/w20/uz.png" class="flag-icon" alt="UZ"> O'zbek</li>
             </ul>
@@ -160,22 +159,37 @@
             </div>
         </header>
 
-        <section id="skills">
+        <!-- YANGLANGAN SKILLS QISMI -->
+        <section id="skills" style="margin-bottom: 2.5rem;">
             <h2 class="section-title" data-i18n="skills_title">Technologies & Skills</h2>
-            <div class="skills-container">
-                <span class="skill-tag">Python</span>
-                <span class="skill-tag">Langchain</span>
-                <span class="skill-tag">Langgraph</span>
-                <span class="skill-tag">LLM</span>
-                <span class="skill-tag">RAG</span>
-                <span class="skill-tag">PyTorch</span>
-                <span class="skill-tag">Scikit-learn</span>
-                <span class="skill-tag">FastAPI</span>
-                <span class="skill-tag">PostgreSQL</span>
-                <span class="skill-tag">Docker</span>
-                <span class="skill-tag">Git</span>
-                <span class="skill-tag">N8N</span>
-                <span class="skill-tag">Linux</span>
+            <div class="grid-2">
+                <!-- AI Kartochkasi -->
+                <div class="card" style="margin-bottom: 0;">
+                    <h3 data-i18n="ai_skills_title" style="margin-bottom: 15px; display: flex; align-items: center; gap: 8px; color: var(--accent-color);">🤖 AI & Data Science</h3>
+                    <div class="skills-container">
+                        <span class="skill-tag">Python</span>
+                        <span class="skill-tag">PyTorch</span>
+                        <span class="skill-tag">Langchain</span>
+                        <span class="skill-tag">Langgraph</span>
+                        <span class="skill-tag">LLM / RAG</span>
+                        <span class="skill-tag">Scikit-learn</span>
+                        <span class="skill-tag">N8N</span>
+                    </div>
+                </div>
+                
+                <!-- Backend Kartochkasi -->
+                <div class="card" style="margin-bottom: 0;">
+                    <h3 data-i18n="backend_skills_title" style="margin-bottom: 15px; display: flex; align-items: center; gap: 8px; color: var(--accent-color);">⚙️ Backend & DevOps</h3>
+                    <div class="skills-container">
+                        <span class="skill-tag">FastAPI</span>
+                        <span class="skill-tag">PostgreSQL</span>
+                        <span class="skill-tag">Docker</span>
+                        <span class="skill-tag">Linux / Ubuntu</span>
+                        <span class="skill-tag">Oracle Cloud</span>
+                        <span class="skill-tag">SQLModel</span>
+                        <span class="skill-tag">Git</span>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -209,7 +223,7 @@
                 <div class="card">
                     <h3 style="margin-bottom: 10px;" data-i18n="lang_title">Languages</h3>
                     <div class="lang-item"><span class="lang-name" data-i18n="lang_uz"><img src="https://flagcdn.com/w20/uz.png" class="flag-icon" alt="UZ"> Uzbek</span> <span style="color: var(--heading-color);" data-i18n="lang_native">Native</span></div>
-                    <div class="lang-item"><span class="lang-name" data-i18n="lang_en"><img src="https://flagcdn.com/w20/us.png" class="flag-icon" alt="EN"> English</span> <span style="color: var(--heading-color);">B2 (CEFR)</span></div>
+                    <div class="lang-item"><span class="lang-name" data-i18n="lang_en"><img src="https://flagcdn.com/w20/gb.png" class="flag-icon" alt="EN"> English</span> <span style="color: var(--heading-color);">B2 (CEFR)</span></div>
                     <div class="lang-item"><span class="lang-name" data-i18n="lang_ru"><img src="https://flagcdn.com/w20/ru.png" class="flag-icon" alt="RU"> Russian</span> <span style="color: var(--heading-color);">B1</span></div>
                 </div>
             </section>
@@ -254,14 +268,15 @@
         const translations = {
             en: {
                 name: "English", role: "AI Engineer", location: "📍 Tashkent, Uzbekistan",
-                skills_title: "Technologies & Skills", exp_title: "Experience",
-                exp_role: "AI Engineer", exp_company: "Tenzorsoft | Tashkent, Uzbekistan",
+                skills_title: "Technologies & Skills", 
+                ai_skills_title: "🤖 AI & Data Science", backend_skills_title: "⚙️ Backend & DevOps",
+                exp_title: "Experience", exp_role: "AI Engineer", exp_company: "Tenzorsoft | Tashkent, Uzbekistan",
                 exp_date: "08/2025 - 03/2026", exp_desc: "Created an AI workflow with langgraph framework for Chemical industry of Uzbekistan.",
                 edu_title: "Education", edu_degree: "Bachelor: Agribusiness and Digital Economy",
                 edu_uni: "Andijan Institute of Agriculture and Agrotechnologies",
                 lang_title: "Languages", 
                 lang_uz: "<img src='https://flagcdn.com/w20/uz.png' class='flag-icon' alt='UZ'> Uzbek", 
-                lang_en: "<img src='https://flagcdn.com/w20/us.png' class='flag-icon' alt='EN'> English", 
+                lang_en: "<img src='https://flagcdn.com/w20/gb.png' class='flag-icon' alt='EN'> English", 
                 lang_ru: "<img src='https://flagcdn.com/w20/ru.png' class='flag-icon' alt='RU'> Russian", 
                 lang_native: "Native",
                 proj_title: "Projects",
@@ -280,14 +295,15 @@
             },
             uz: {
                 name: "O'zbek", role: "AI Muhandisi", location: "📍 Toshkent, O'zbekiston",
-                skills_title: "Texnologiyalar va Ko'nikmalar", exp_title: "Ish Tajribasi",
-                exp_role: "AI Muhandisi", exp_company: "Tenzorsoft | Toshkent, O'zbekiston",
+                skills_title: "Texnologiyalar va Ko'nikmalar", 
+                ai_skills_title: "🤖 AI va Mashinali o'rganish", backend_skills_title: "⚙️ Backend va Infratuzilma",
+                exp_title: "Ish Tajribasi", exp_role: "AI Muhandisi", exp_company: "Tenzorsoft | Toshkent, O'zbekiston",
                 exp_date: "08/2025 - 03/2026", exp_desc: "O'zbekiston kimyo sanoati uchun LangGraph yordamida AI ish oqimini (workflow) yaratdi.",
                 edu_title: "Ta'lim", edu_degree: "Bakalavr: Agrobiznes va Raqamli Iqtisodiyot",
                 edu_uni: "Andijon Qishloq Xo'jaligi va Agrotexnologiyalar Instituti",
                 lang_title: "Tillar", 
                 lang_uz: "<img src='https://flagcdn.com/w20/uz.png' class='flag-icon' alt='UZ'> O'zbek tili", 
-                lang_en: "<img src='https://flagcdn.com/w20/us.png' class='flag-icon' alt='EN'> Ingliz tili", 
+                lang_en: "<img src='https://flagcdn.com/w20/gb.png' class='flag-icon' alt='EN'> Ingliz tili", 
                 lang_ru: "<img src='https://flagcdn.com/w20/ru.png' class='flag-icon' alt='RU'> Rus tili", 
                 lang_native: "Ona tili",
                 proj_title: "Asosiy Loyihalar",
@@ -306,14 +322,15 @@
             },
             ru: {
                 name: "Русский", role: "AI Инженер", location: "📍 Ташкент, Узбекистан",
-                skills_title: "Технологии и Навыки", exp_title: "Опыт работы",
-                exp_role: "AI Инженер", exp_company: "Tenzorsoft | Ташкент, Узбекистан",
+                skills_title: "Технологии и Навыки", 
+                ai_skills_title: "🤖 ИИ и Данные", backend_skills_title: "⚙️ Бэкенд и DevOps",
+                exp_title: "Опыт работы", exp_role: "AI Инженер", exp_company: "Tenzorsoft | Ташкент, Узбекистан",
                 exp_date: "08/2025 - 03/2026", exp_desc: "Создал рабочий процесс ИИ с использованием LangGraph для химической промышленности Узбекистана.",
                 edu_title: "Образование", edu_degree: "Бакалавр: Агробизнес и Цифровая Экономика",
                 edu_uni: "Андижанский институт сельского хозяйства и агротехнологий",
                 lang_title: "Языки", 
                 lang_uz: "<img src='https://flagcdn.com/w20/uz.png' class='flag-icon' alt='UZ'> Узбекский", 
-                lang_en: "<img src='https://flagcdn.com/w20/us.png' class='flag-icon' alt='EN'> Английский", 
+                lang_en: "<img src='https://flagcdn.com/w20/gb.png' class='flag-icon' alt='EN'> Английский", 
                 lang_ru: "<img src='https://flagcdn.com/w20/ru.png' class='flag-icon' alt='RU'> Русский", 
                 lang_native: "Родной",
                 proj_title: "Проекты",
