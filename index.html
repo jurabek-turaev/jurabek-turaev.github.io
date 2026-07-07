@@ -1,455 +1,282 @@
 <!DOCTYPE html>
-<html lang="uz">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jurabek Turaev | AI Engineer</title>
+    <title>Jurabek Turaev — Backend &amp; AI Engineer</title>
+
+    <meta name="description" content="Jurabek Turaev — Backend & AI Engineer. Django, DRF, PostgreSQL/PostGIS, WebSockets, Docker & self-hosted DevOps. Creator of Pawura, a pet social + marketplace platform.">
+    <meta name="author" content="Jurabek Turaev">
+    <meta name="theme-color" content="#0a0c13">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Jurabek Turaev — Backend & AI Engineer">
+    <meta property="og:description" content="Backend & AI Engineer. Creator of Pawura — a pet social + marketplace platform (Django, PostGIS, WebSockets, Docker, self-hosted).">
+    <meta property="og:url" content="https://jurabek-turaev.github.io/">
+    <meta name="twitter:card" content="summary">
+
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧑‍💻</text></svg>">
-    <style>
-        :root {
-            --bg-color: #0f111a;
-            --glass-bg: rgba(30, 33, 50, 0.6);
-            --text-color: #8f93a2;
-            --heading-color: #fffffe;
-            --accent-color: #82aaff;
-            --border-color: rgba(255, 255, 255, 0.1);
-        }
 
-        [data-theme="light"] {
-            --bg-color: #f0f2f5;
-            --glass-bg: rgba(255, 255, 255, 0.7);
-            --text-color: #4a4a4a;
-            --heading-color: #1a1a1a;
-            --accent-color: #2962ff;
-            --border-color: rgba(0, 0, 0, 0.1);
-        }
+    <!-- Fonts (GitHub Pages has no CSP; safe to load webfonts) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            margin: 0; padding: 0; line-height: 1.7;
-            transition: background-color 0.4s ease, color 0.4s ease;
-            overflow-x: hidden;
-        }
-
-        #bg-canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; }
-
-        .controls { position: fixed; top: 20px; right: 20px; display: flex; gap: 12px; z-index: 100; }
-        
-        .control-btn {
-            background: var(--glass-bg); color: var(--heading-color); border: 1px solid var(--border-color);
-            padding: 8px 16px; border-radius: 25px; cursor: pointer; backdrop-filter: blur(12px);
-            font-family: inherit; font-size: 0.95rem; outline: none; transition: 0.3s ease;
-            display: flex; align-items: center; justify-content: center; gap: 8px;
-        }
-        .control-btn:hover { border-color: var(--accent-color); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1);}
-
-        .custom-dropdown { position: relative; display: inline-block; }
-        .chevron { width: 14px; height: 14px; fill: currentColor; transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
-        .custom-dropdown.open .chevron { transform: rotate(180deg); }
-        
-        .dropdown-menu {
-            position: absolute; top: calc(100% + 10px); right: 0;
-            background: var(--glass-bg); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-            border: 1px solid var(--border-color); border-radius: 12px;
-            list-style: none; padding: 8px 0; margin: 0; min-width: 140px;
-            opacity: 0; visibility: hidden; transform: translateY(-15px) scale(0.95);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2); z-index: 101;
-        }
-        .custom-dropdown.open .dropdown-menu { opacity: 1; visibility: visible; transform: translateY(0) scale(1); }
-        
-        .dropdown-menu li {
-            padding: 10px 20px; cursor: pointer; color: var(--heading-color); font-size: 0.9rem;
-            transition: background 0.2s, color 0.2s; display: flex; align-items: center; gap: 10px;
-        }
-        .dropdown-menu li:hover { background: rgba(130, 170, 255, 0.15); color: var(--accent-color); }
-
-        .flag-icon { width: 20px; height: 14px; border-radius: 2px; object-fit: cover; box-shadow: 0 1px 3px rgba(0,0,0,0.2);}
-
-        #theme-switch { width: 42px; height: 42px; padding: 0; position: relative; overflow: hidden; }
-        #theme-switch svg {
-            position: absolute; width: 20px; height: 20px;
-            transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55), opacity 0.4s ease;
-        }
-        .sun-icon { opacity: 1; transform: rotate(0deg) scale(1); }
-        .moon-icon { opacity: 0; transform: rotate(-90deg) scale(0.5); }
-        [data-theme="light"] .sun-icon { opacity: 0; transform: rotate(90deg) scale(0.5); }
-        [data-theme="light"] .moon-icon { opacity: 1; transform: rotate(0deg) scale(1); }
-
-        .glass-container {
-            max-width: 900px; margin: 5rem auto 3rem; background: var(--glass-bg);
-            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-            border: 1px solid var(--border-color); border-radius: 20px; padding: 3rem;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
-        }
-        @media (max-width: 768px) {
-            .glass-container { margin: 4rem 1rem 1rem; padding: 1.5rem; }
-            .controls { top: 10px; right: 10px; }
-        }
-
-        header { text-align: center; padding-bottom: 2rem; border-bottom: 1px solid var(--border-color); margin-bottom: 2rem; }
-        h1, h2, h3, h4 { color: var(--heading-color); margin-top: 0; }
-        h1 { font-size: 2.8rem; margin-bottom: 5px; }
-        h2 { font-size: 1.5rem; color: var(--accent-color); font-weight: 500; margin-bottom: 20px;}
-        
-        .contact-info { display: flex; justify-content: center; flex-wrap: wrap; gap: 15px; font-size: 0.95rem; }
-        .contact-info a, .contact-info span {
-            color: var(--text-color); text-decoration: none; display: flex; align-items: center; gap: 5px;
-            background: rgba(0,0,0,0.1); padding: 5px 15px; border-radius: 20px; border: 1px solid var(--border-color);
-            transition: 0.3s;
-        }
-        .contact-info a:hover { color: var(--accent-color); border-color: var(--accent-color); transform: translateY(-2px);}
-
-        .section-title { font-size: 1.8rem; border-bottom: 2px solid var(--border-color); padding-bottom: 10px; margin-bottom: 25px; display: inline-block; }
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        @media (max-width: 768px) { .grid-2 { grid-template-columns: 1fr; } }
-
-        .card { background: rgba(0,0,0,0.05); padding: 1.8rem; border-radius: 10px; margin-bottom: 1.5rem; border: 1px solid var(--border-color); transition: transform 0.2s; }
-        .card:hover { transform: translateY(-3px); border-color: var(--accent-color); }
-        .card-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;}
-        .card-header h3 { margin-bottom: 5px; }
-        .date-badge { background: var(--bg-color); padding: 4px 10px; border-radius: 5px; font-size: 0.85rem; border: 1px solid var(--border-color); height: fit-content;}
-
-        .skills-container { display: flex; flex-wrap: wrap; gap: 10px; }
-        .skill-tag { background-color: rgba(130, 170, 255, 0.1); color: var(--accent-color); padding: 8px 16px; border-radius: 8px; font-size: 0.9rem; border: 1px solid rgba(130, 170, 255, 0.2); }
-        .lang-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px dashed var(--border-color); }
-        .lang-item:last-child { border-bottom: none; }
-        .lang-name { display: flex; align-items: center; gap: 8px; }
-    </style>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+    <div class="bg-fx"></div>
+    <div class="bg-grid"></div>
 
-    <canvas id="bg-canvas"></canvas>
-
+    <!-- Controls -->
     <nav class="controls">
-        <div class="custom-dropdown" id="lang-dropdown">
-            <button class="control-btn" id="lang-btn">
-                <span id="current-lang-text">English</span>
-                <svg class="chevron" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+        <div class="dd" id="lang-dd">
+            <button class="ctrl" id="lang-btn" aria-haspopup="true" aria-expanded="false">
+                <span id="lang-current">English</span>
+                <svg class="chev" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
             </button>
-            <ul class="dropdown-menu">
-                <li data-value="en"><img src="https://flagcdn.com/w20/gb.png" class="flag-icon" alt="EN"> English</li>
-                <li data-value="ru"><img src="https://flagcdn.com/w20/ru.png" class="flag-icon" alt="RU"> Русский</li>
-                <li data-value="uz"><img src="https://flagcdn.com/w20/uz.png" class="flag-icon" alt="UZ"> O'zbek</li>
+            <ul class="dd-menu" role="menu">
+                <li data-lang="en" role="menuitem" tabindex="0"><img src="" class="flag" alt="EN" id="fl-en"> English</li>
+                <li data-lang="ru" role="menuitem" tabindex="0"><img src="" class="flag" alt="RU" id="fl-ru"> Русский</li>
+                <li data-lang="uz" role="menuitem" tabindex="0"><img src="" class="flag" alt="UZ" id="fl-uz"> O'zbek</li>
             </ul>
         </div>
-
-        <button class="control-btn" id="theme-switch" title="Tema o'zgartirish">
-            <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-            </svg>
-            <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-            </svg>
+        <button class="ctrl" id="theme-btn" title="Toggle theme" aria-label="Toggle theme">
+            <svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+            <svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
         </button>
     </nav>
 
-    <div class="glass-container">
-        <header>
-            <h1>Jurabek Turaev</h1>
-            <h2 data-i18n="role">AI Engineer</h2>
-            <div class="contact-info">
-                <span data-i18n="location">📍 Tashkent, Uzbekistan</span>
-                <a href="mailto:torayevjorabek833@gmail.com">✉️ torayevjorabek833@gmail.com</a>
-                <a href="tel:+998907615171">📞 +998 90 761 51 71</a>
-                <a href="https://www.linkedin.com/in/jurabek-turaev-b347302a8" target="_blank">🔗 LinkedIn</a>
-                <a href="https://github.com/jurabek-turaev" target="_blank">💻 GitHub</a>
-            </div>
-        </header>
+    <main class="wrap">
+        <div class="bento">
 
-        <!-- YANGLANGAN SKILLS QISMI -->
-        <section id="skills" style="margin-bottom: 2.5rem;">
-            <h2 class="section-title" data-i18n="skills_title">Technologies & Skills</h2>
-            <div class="grid-2">
-                <!-- AI Kartochkasi -->
-                <div class="card" style="margin-bottom: 0;">
-                    <h3 data-i18n="ai_skills_title" style="margin-bottom: 15px; display: flex; align-items: center; gap: 8px; color: var(--accent-color);">🤖 AI & Data Science</h3>
-                    <div class="skills-container">
-                        <span class="skill-tag">Python</span>
-                        <span class="skill-tag">Numpy</span>
-                        <span class="skill-tag">Pandas</span>
-                        <span class="skill-tag">Matplotlib</span>
-                        <span class="skill-tag">Seaborn</span>
-                        <span class="skill-tag">Scikit-learn</span>
-                        <span class="skill-tag">PyTorch</span>
-                        <span class="skill-tag">Langchain</span>
-                        <span class="skill-tag">Langgraph</span>
-                        <span class="skill-tag">LLM</span>
-                        <span class="skill-tag">RAG</span>
-                        <span class="skill-tag">N8N</span>
-                    </div>
-                </div>
-                
-                <!-- Backend Kartochkasi -->
-                <div class="card" style="margin-bottom: 0;">
-                    <h3 data-i18n="backend_skills_title" style="margin-bottom: 15px; display: flex; align-items: center; gap: 8px; color: var(--accent-color);">⚙️ Backend & DevOps</h3>
-                    <div class="skills-container">
-                        <span class="skill-tag">Django</span>
-                        <span class="skill-tag">REST API</span>
-                        <span class="skill-tag">FastAPI</span>
-                        <span class="skill-tag">PostgreSQL</span>
-                        <span class="skill-tag">Docker</span>
-                        <span class="skill-tag">Nginx</span>
-                        <span class="skill-tag">Linux / Ubuntu</span>
-                        <span class="skill-tag">Oracle Cloud</span>
-                        <span class="skill-tag">Git</span>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <div class="grid-2">
-            <section id="experience">
-                <h2 class="section-title" data-i18n="exp_title">Experience</h2>
-                <div class="card">
-                    <div class="card-header">
-                        <div>
-                            <h3 data-i18n="exp_role">AI Engineer</h3>
-                            <div style="font-size: 0.95rem; color: var(--text-color);" data-i18n="exp_company">Tenzorsoft | Tashkent, Uzbekistan</div>
-                        </div>
-                        <span class="date-badge" data-i18n="exp_date">08/2025 - 03/2026</span>
-                    </div>
-                    <p data-i18n="exp_desc">Created an AI workflow with langgraph framework for Chemical industry of Uzbekistan.</p>
+            <!-- HERO -->
+            <section class="cell col-4 hero reveal">
+                <span class="eyebrow" data-i18n="eyebrow">Backend · AI · Infrastructure</span>
+                <h1>Jurabek Turaev</h1>
+                <p class="role" data-i18n="role">Backend &amp; AI Engineer</p>
+                <p data-i18n="intro">I build and operate production backends — from database and real-time systems to Docker deployment on servers I run myself.</p>
+                <div class="hero-links">
+                    <a class="chip" href="mailto:torayevjorabek833@gmail.com">✉️ <span>torayevjorabek833@gmail.com</span></a>
+                    <a class="chip" href="https://github.com/jurabek-turaev" target="_blank" rel="noopener">💻 GitHub</a>
+                    <a class="chip" href="https://www.linkedin.com/in/jurabek-turaev-b347302a8" target="_blank" rel="noopener">🔗 LinkedIn</a>
+                    <a class="chip" href="tel:+998907615171">📞 +998 90 761 51 71</a>
+                    <span class="chip">📍 <span data-i18n="c_location">Tashkent, UZ</span></span>
                 </div>
             </section>
 
-            <section id="education">
-                <h2 class="section-title" data-i18n="edu_title">Education</h2>
-                <div class="card">
-                    <div class="card-header">
-                        <div>
-                            <h3 data-i18n="edu_degree">Bachelor: Agribusiness and Digital Economy</h3>
-                            <div style="font-size: 0.95rem; color: var(--text-color);" data-i18n="edu_uni">Andijan Institute of Agriculture and Agrotechnologies</div>
-                        </div>
-                        <span class="date-badge">08/2021 - 05/2025</span>
-                    </div>
+            <!-- AVATAR / AVAILABILITY -->
+            <!--
+              To use your own photo: put an image at  assets/avatar.jpg
+              (square works best, e.g. 400x400). It will replace the "JT"
+              monogram automatically. To change the path/format, edit the
+              <img src="..."> below. If the image is missing, the monogram
+              fallback is shown instead.
+            -->
+            <section class="cell col-2 avatar-cell reveal">
+                <div class="avatar-frame">
+                    <img src="assets/avatar.jpg" alt="Jurabek Turaev" class="avatar-img"
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='grid';">
+                    <div class="monogram" style="display:none;">JT</div>
                 </div>
+                <span class="avail"><span class="pulse-dot"></span> <span data-i18n="available">Open to work</span></span>
+            </section>
 
-                <div class="card">
-                    <h3 style="margin-bottom: 10px;" data-i18n="lang_title">Languages</h3>
-                    <div class="lang-item"><span class="lang-name" data-i18n="lang_uz"><img src="https://flagcdn.com/w20/uz.png" class="flag-icon" alt="UZ"> Uzbek</span> <span style="color: var(--heading-color);" data-i18n="lang_native">Native</span></div>
-                    <div class="lang-item"><span class="lang-name" data-i18n="lang_en"><img src="https://flagcdn.com/w20/gb.png" class="flag-icon" alt="EN"> English</span> <span style="color: var(--heading-color);">B2 (CEFR)</span></div>
-                    <div class="lang-item"><span class="lang-name" data-i18n="lang_ru"><img src="https://flagcdn.com/w20/ru.png" class="flag-icon" alt="RU"> Russian</span> <span style="color: var(--heading-color);">B1</span></div>
+            <!-- STATS -->
+            <section class="cell col-2 s-half stat reveal">
+                <div class="num"><span class="accent">1</span></div>
+                <div class="label" data-i18n="stat_years_label">yr building</div>
+            </section>
+            <section class="cell col-2 s-half stat reveal">
+                <div class="num"><span class="accent">4</span></div>
+                <div class="label" data-i18n="stat_projects_label">shipped projects</div>
+            </section>
+            <section class="cell col-2 s-half stat reveal">
+                <div class="num"><span class="accent">100%</span></div>
+                <div class="label" data-i18n="stat_solo_label">solo backend</div>
+            </section>
+
+            <!-- SECTION: STACK -->
+            <div class="cell col-6 sec-label reveal">
+                <span class="idx">01</span>
+                <h2 data-i18n="sec_skills">Stack</h2>
+                <span class="line"></span>
+            </div>
+
+            <section class="cell col-2 reveal" style="--accent: var(--c-face);">
+                <div class="skills-head"><span class="dot"></span><span data-i18n="sk_ai">AI &amp; Data</span></div>
+                <div class="tags">
+                    <span class="tag">Python</span><span class="tag">LangChain</span><span class="tag">LangGraph</span>
+                    <span class="tag">RAG</span><span class="tag">LLM</span><span class="tag">Pandas</span>
+                    <span class="tag">NumPy</span><span class="tag">PyTorch</span><span class="tag">Scikit-learn</span>
+                    <span class="tag">N8N</span>
                 </div>
             </section>
+
+            <section class="cell col-2 reveal" style="--accent: var(--indigo);">
+                <div class="skills-head"><span class="dot"></span><span data-i18n="sk_backend">Backend</span></div>
+                <div class="tags">
+                    <span class="tag">Django</span><span class="tag">DRF</span><span class="tag">FastAPI</span>
+                    <span class="tag">REST</span><span class="tag">JWT</span><span class="tag">WebSockets</span>
+                    <span class="tag">Channels</span><span class="tag">PostgreSQL</span><span class="tag">PostGIS</span>
+                    <span class="tag">Redis</span><span class="tag">Stripe</span>
+                </div>
+            </section>
+
+            <section class="cell col-2 reveal" style="--accent: var(--cyan);">
+                <div class="skills-head"><span class="dot"></span><span data-i18n="sk_devops">DevOps &amp; Infra</span></div>
+                <div class="tags">
+                    <span class="tag">Docker</span><span class="tag">Compose</span><span class="tag">Nginx</span>
+                    <span class="tag">Linux</span><span class="tag">Certbot / SSL</span><span class="tag">CI/CD</span>
+                    <span class="tag">Oracle Cloud</span><span class="tag">Cloudinary</span><span class="tag">Self-hosting</span>
+                    <span class="tag">Git</span>
+                </div>
+            </section>
+
+            <!-- SECTION: PROJECTS -->
+            <div class="cell col-6 sec-label reveal">
+                <span class="idx">02</span>
+                <h2 data-i18n="sec_projects">Projects</h2>
+                <span class="line"></span>
+            </div>
+
+            <!-- Pawura flagship -->
+            <section class="cell col-6 flagship reveal">
+                <div class="fs-head">
+                    <h3 class="fs-title" data-i18n="pw_title">Pawura</h3>
+                    <span class="badge-live"><span class="pulse-dot"></span> LIVE</span>
+                    <span class="proj-kind" data-i18n="pw_kind">Flagship · Solo</span>
+                </div>
+                <p class="fs-tagline" data-i18n="pw_tagline">// pet social network + marketplace · EU market</p>
+                <p class="fs-desc" data-i18n="pw_desc">A production platform combining a pet social network with an integrated marketplace and payments. I designed and built the entire backend and infrastructure alone, and I self-host and operate the server.</p>
+
+                <div class="fs-links">
+                    <a class="btn btn-fill" href="https://pawura.net" target="_blank" rel="noopener">🌐 <span data-i18n="pw_visit">Open pawura.net</span></a>
+                    <a class="btn btn-ghost" href="https://api.pawura.net/swagger/" target="_blank" rel="noopener">📘 <span data-i18n="pw_docs">API Docs</span></a>
+                </div>
+
+                <div class="fs-features">
+                    <div class="feat"><div class="feat-ic">💬</div><div><h4 data-i18n="pw_f1_t">Real-time messaging</h4><p data-i18n="pw_f1_d">Direct messages & live chat over WebSockets with Django Channels + Daphne (ASGI) and Redis as the channel layer.</p></div></div>
+                    <div class="feat"><div class="feat-ic">📍</div><div><h4 data-i18n="pw_f2_t">Geolocation & maps</h4><p data-i18n="pw_f2_d">Find nearby vets, parks and pet-friendly places using PostGIS spatial queries on PostgreSQL.</p></div></div>
+                    <div class="feat"><div class="feat-ic">💳</div><div><h4 data-i18n="pw_f3_t">Marketplace & payments</h4><p data-i18n="pw_f3_d">Full commerce flow — catalog, cart, orders, shipping — with Stripe payments and EUR checkout.</p></div></div>
+                    <div class="feat"><div class="feat-ic">🐳</div><div><h4 data-i18n="pw_f4_t">Self-hosted DevOps</h4><p data-i18n="pw_f4_d">Dockerized multi-container stack (web, DB, Redis, Nginx), SSL via Certbot, health checks & resource limits — deployed and maintained by me.</p></div></div>
+                </div>
+
+                <div class="tags">
+                    <span class="tag">Django</span><span class="tag">DRF</span><span class="tag">Channels</span>
+                    <span class="tag">PostgreSQL</span><span class="tag">PostGIS</span><span class="tag">Redis</span>
+                    <span class="tag">Stripe</span><span class="tag">Docker</span><span class="tag">Nginx</span>
+                </div>
+            </section>
+
+            <!-- Chemical AI -->
+            <section class="cell col-2 proj chem reveal">
+                <div class="proj-head">
+                    <h3 class="proj-title" data-i18n="ch_title">Chemical Industry AI Assistant</h3>
+                    <span class="proj-kind" data-i18n="ch_kind">AI Agent · Tenzorsoft</span>
+                </div>
+                <p class="proj-desc" data-i18n="ch_desc">A natural-language business analytics assistant for Uzbekistan's Chemical Industry platform.</p>
+                <ul class="proj-points">
+                    <li data-i18n="ch_p1">LangGraph workflow classifies intent, generates SQL with an LLM, runs it on PostgreSQL and writes a clear answer.</li>
+                    <li data-i18n="ch_p2">Role-based access, session chat memory and multilingual replies.</li>
+                    <li data-i18n="ch_p3">Voice input via speech-to-text proxy and automatic DOCX report generation.</li>
+                </ul>
+                <div class="proj-foot">
+                    <span class="proj-tag">LangGraph</span><span class="proj-tag">Gemini</span>
+                    <span class="proj-tag">FastAPI</span><span class="proj-tag">PostgreSQL</span>
+                </div>
+            </section>
+
+            <!-- AI Lawyer -->
+            <section class="cell col-2 proj law reveal">
+                <div class="proj-head">
+                    <h3 class="proj-title" data-i18n="lw_title">AI Lawyer</h3>
+                    <span class="proj-kind" data-i18n="lw_kind">RAG · Legal</span>
+                </div>
+                <p class="proj-desc" data-i18n="lw_desc">An AI contract-analysis platform focused on Uzbekistan legislation.</p>
+                <ul class="proj-points">
+                    <li data-i18n="lw_p1">RAG pipeline over local laws using LangChain, Chroma and Gemini embeddings.</li>
+                    <li data-i18n="lw_p2">Parses PDF, DOCX and TXT contracts; multi-mode analysis.</li>
+                    <li data-i18n="lw_p3">Live web price search with LLM fallback for decision-ready summaries.</li>
+                </ul>
+                <div class="proj-foot">
+                    <span class="proj-tag">LangChain</span><span class="proj-tag">Chroma</span>
+                    <span class="proj-tag">RAG</span><span class="proj-tag">FastAPI</span>
+                </div>
+            </section>
+
+            <!-- Face Matching -->
+            <section class="cell col-2 proj face reveal">
+                <div class="proj-head">
+                    <h3 class="proj-title" data-i18n="fc_title">Face Match Auth</h3>
+                    <span class="proj-kind" data-i18n="fc_kind">CV · Production</span>
+                </div>
+                <p class="proj-desc" data-i18n="fc_desc">A face-verification API used by a mobile dating app.</p>
+                <ul class="proj-points">
+                    <li data-i18n="fc_p1">Built with InsightFace (ArcFace) and ONNX Runtime to extract facial embeddings.</li>
+                    <li data-i18n="fc_p2">Compares images by cosine similarity, returns a same-person verdict with confidence.</li>
+                    <li data-i18n="fc_p3">Lightweight FastAPI service, Dockerized — live in production.</li>
+                </ul>
+                <div class="proj-foot">
+                    <span class="proj-tag">InsightFace</span><span class="proj-tag">ONNX</span>
+                    <span class="proj-tag">FastAPI</span><span class="proj-tag">Docker</span>
+                </div>
+            </section>
+
+            <!-- SECTION: EXPERIENCE + EDUCATION -->
+            <div class="cell col-6 sec-label reveal">
+                <span class="idx">03</span>
+                <h2 data-i18n="sec_experience">Experience</h2>
+                <span class="line"></span>
+            </div>
+
+            <!-- Experience timeline -->
+            <section class="cell col-4 m-full reveal">
+                <div class="tl-item current">
+                    <div class="tl-top">
+                        <span class="tl-role" data-i18n="exp_pawura_role">Backend Developer</span>
+                        <span class="tl-date" data-i18n="exp_pawura_date">05/2026 — Present</span>
+                    </div>
+                    <div class="tl-org" data-i18n="exp_pawura_org">Pawura · Remote</div>
+                    <p class="tl-desc" data-i18n="exp_pawura_desc">Building the full backend and infrastructure for a pet social + marketplace platform for the EU market, and running the server myself.</p>
+                </div>
+                <div class="tl-item">
+                    <div class="tl-top">
+                        <span class="tl-role" data-i18n="exp_tz_role">AI Engineer</span>
+                        <span class="tl-date" data-i18n="exp_tz_date">08/2025 — 03/2026</span>
+                    </div>
+                    <div class="tl-org" data-i18n="exp_tz_org">Tenzorsoft · Tashkent</div>
+                    <p class="tl-desc" data-i18n="exp_tz_desc">Built LangGraph-based AI systems for the chemical industry of Uzbekistan — text-to-SQL analytics, RAG document analysis and more.</p>
+                </div>
+            </section>
+
+            <!-- Education + languages -->
+            <section class="cell col-2 m-full reveal">
+                <div class="edu-block">
+                    <div class="skills-head" style="margin-bottom:8px;"><span data-i18n="sec_education">Education</span></div>
+                    <div class="edu-deg" data-i18n="edu_deg">B.Sc. Agribusiness &amp; Digital Economy</div>
+                    <div class="edu-uni" data-i18n="edu_uni">Andijan Institute of Agriculture and Agrotechnologies</div>
+                    <div class="tl-date" style="margin-top:4px;" data-i18n="edu_date">2021 — 2025</div>
+                </div>
+                <div class="edu-block">
+                    <div class="skills-head" style="margin-bottom:8px;"><span data-i18n="langs_label">Languages</span></div>
+                    <div class="lang-row"><span class="lang-name" data-i18n="lang_uz">Uzbek</span><span class="lang-lvl" data-i18n="lvl_native">Native</span></div>
+                    <div class="lang-row"><span class="lang-name" data-i18n="lang_en">English</span><span class="lang-lvl">B2</span></div>
+                    <div class="lang-row"><span class="lang-name" data-i18n="lang_ru">Russian</span><span class="lang-lvl">B1</span></div>
+                </div>
+            </section>
+
         </div>
 
-        <section id="projects" style="margin-top: 2rem;">
-            <h2 class="section-title" data-i18n="proj_title">Projects</h2>
-            
-            <div class="card">
-                <h3>AI Chatbot for Chemical Industry</h3>
-                <p data-i18n="p1_desc">We built an AI assistant for the Uzbekistan's Chemical Industry platform to let users ask business questions in natural language and get data-driven answers instantly.</p>
-                <ul>
-                    <li data-i18n="p1_l1">Uses a LangGraph workflow to classify user intent, generate SQL with LLM, execute queries on PostgreSQL, and produce clear final responses.</li>
-                    <li data-i18n="p1_l2">Designed for enterprise analytics, including sales lots, debts, contracts, warehouse balances, and operational metrics.</li>
-                    <li data-i18n="p1_l3">Backend implemented with FastAPI, session-based chat memory, structured table output, and multilingual response handling.</li>
-                </ul>
-            </div>
+        <p class="foot" data-i18n="footer">Designed &amp; built by Jurabek Turaev · 2026</p>
+    </main>
 
-            <div class="card">
-                <h3>AI Lawyer</h3>
-                <p data-i18n="p2_desc">Built an AI-powered legal contract analysis platform focused on Uzbekistan legislation, with a FastAPI backend and Streamlit interface.</p>
-                <ul>
-                    <li data-i18n="p2_l1">Processes PDF, DOCX, and TXT contracts to evaluate legal compliance, rights violations, and potential risks.</li>
-                    <li data-i18n="p2_l2">Implemented a RAG pipeline using LangChain, Chroma, and Gemini embeddings over local laws.</li>
-                    <li data-i18n="p2_l3">Performs market-price benchmarking via live web search and delivers decision-ready summaries.</li>
-                </ul>
-            </div>
-
-            <div class="card">
-                <h3>Face Matching with AI</h3>
-                <p data-i18n="p3_desc">A face-matching API designed for dating-style platforms to help verify profiles and reduce fake or duplicate accounts.</p>
-                <ul>
-                    <li data-i18n="p3_l1">Built with Python, FastAPI, InsightFace (ArcFace), and ONNX Runtime to extract facial embeddings and compare cosine similarity.</li>
-                    <li data-i18n="p3_l2">Takes image URLs, preprocesses them, detects faces, and returns a clear similarity percentage.</li>
-                    <li data-i18n="p3_l3">Containerized with Docker and served via Uvicorn for a lightweight, production-ready backend.</li>
-                </ul>
-            </div>
-        </section>
-    </div>
-
+    <script src="js/flags.js"></script>
+    <script src="js/translations.js"></script>
+    <script src="js/main.js"></script>
     <script>
-        const translations = {
-            en: {
-                name: "English", role: "AI Engineer", location: "📍 Tashkent, Uzbekistan",
-                skills_title: "Technologies & Skills", 
-                ai_skills_title: "🤖 AI & Data Science", backend_skills_title: "⚙️ Backend & DevOps",
-                exp_title: "Experience", exp_role: "AI Engineer", exp_company: "Tenzorsoft | Tashkent, Uzbekistan",
-                exp_date: "08/2025 - 03/2026", exp_desc: "Created an AI workflow with langgraph framework for Chemical industry of Uzbekistan.",
-                edu_title: "Education", edu_degree: "Bachelor: Agribusiness and Digital Economy",
-                edu_uni: "Andijan Institute of Agriculture and Agrotechnologies",
-                lang_title: "Languages", 
-                lang_uz: "<img src='https://flagcdn.com/w20/uz.png' class='flag-icon' alt='UZ'> Uzbek", 
-                lang_en: "<img src='https://flagcdn.com/w20/gb.png' class='flag-icon' alt='EN'> English", 
-                lang_ru: "<img src='https://flagcdn.com/w20/ru.png' class='flag-icon' alt='RU'> Russian", 
-                lang_native: "Native",
-                proj_title: "Projects",
-                p1_desc: "We built an AI assistant for the Uzbekistan's Chemical Industry platform to let users ask business questions in natural language and get data-driven answers instantly.",
-                p1_l1: "Uses a LangGraph workflow to classify user intent, generate SQL with LLM, execute queries on PostgreSQL, and produce clear final responses.",
-                p1_l2: "Designed for enterprise analytics, including sales lots, debts, contracts, warehouse balances, and operational metrics.",
-                p1_l3: "Backend implemented with FastAPI, session-based chat memory, structured table output, and multilingual response handling.",
-                p2_desc: "Built an AI-powered legal contract analysis platform focused on Uzbekistan legislation, with a FastAPI backend and Streamlit interface.",
-                p2_l1: "Processes PDF, DOCX, and TXT contracts to evaluate legal compliance, rights violations, and potential risks.",
-                p2_l2: "Implemented a RAG pipeline using LangChain, Chroma, and Gemini embeddings over local laws.",
-                p2_l3: "Performs market-price benchmarking via live web search and delivers decision-ready summaries.",
-                p3_desc: "A face-matching API designed for dating-style platforms to help verify profiles and reduce fake or duplicate accounts.",
-                p3_l1: "Built with Python, FastAPI, InsightFace (ArcFace), and ONNX Runtime to extract facial embeddings and compare cosine similarity.",
-                p3_l2: "Takes image URLs, preprocesses them, detects faces, and returns a clear similarity percentage.",
-                p3_l3: "Containerized with Docker and served via Uvicorn for a lightweight, production-ready backend."
-            },
-            uz: {
-                name: "O'zbek", role: "AI Muhandisi", location: "📍 Toshkent, O'zbekiston",
-                skills_title: "Texnologiyalar va Ko'nikmalar", 
-                ai_skills_title: "🤖 AI va Mashinali o'rganish", backend_skills_title: "⚙️ Backend va Infratuzilma",
-                exp_title: "Ish Tajribasi", exp_role: "AI Muhandisi", exp_company: "Tenzorsoft | Toshkent, O'zbekiston",
-                exp_date: "08/2025 - 03/2026", exp_desc: "O'zbekiston kimyo sanoati uchun LangGraph yordamida AI ish oqimini (workflow) yaratdi.",
-                edu_title: "Ta'lim", edu_degree: "Bakalavr: Agrobiznes va Raqamli Iqtisodiyot",
-                edu_uni: "Andijon Qishloq Xo'jaligi va Agrotexnologiyalar Instituti",
-                lang_title: "Tillar", 
-                lang_uz: "<img src='https://flagcdn.com/w20/uz.png' class='flag-icon' alt='UZ'> O'zbek tili", 
-                lang_en: "<img src='https://flagcdn.com/w20/gb.png' class='flag-icon' alt='EN'> Ingliz tili", 
-                lang_ru: "<img src='https://flagcdn.com/w20/ru.png' class='flag-icon' alt='RU'> Rus tili", 
-                lang_native: "Ona tili",
-                proj_title: "Asosiy Loyihalar",
-                p1_desc: "O'zbekiston kimyo sanoati platformasi uchun biznes savollarga tabiiy tilda ma'lumotlarga asoslangan javob beruvchi AI yordamchi.",
-                p1_l1: "Foydalanuvchi maqsadini aniqlash, LLM orqali SQL yozish va PostgreSQL'da so'rovlarni bajarish uchun LangGraph ish oqimi qo'llanildi.",
-                p1_l2: "Korxona tahliliy ma'lumotlari: sotuvlar, qarzlar, shartnomalar va ombor qoldiqlarini hisoblash uchun mo'ljallangan.",
-                p1_l3: "FastAPI asosida sessiyali xotira, jadval formatidagi javoblar va ko'p tilli qo'llab-quvvatlash joriy etildi.",
-                p2_desc: "O'zbekiston qonunchiligiga asoslangan yuridik shartnomalarni tahlil qiluvchi, FastAPI va Streamlit interfeysiga ega AI platforma.",
-                p2_l1: "PDF, DOCX va TXT fayllarni qayta ishlab, huquqiy moslik va ehtimoliy xavflarni baholaydi.",
-                p2_l2: "Mahalliy qonunlar bazasida LangChain, Chroma va Gemini yordamida RAG tizimi qurildi.",
-                p2_l3: "Jonli veb qidiruv orqali bozor narxlarini solishtiradi va yakuniy qaror xulosalarini taqdim etadi.",
-                p3_desc: "Tanishuv (dating) platformalarida akkauntlarni tasdiqlash uchun yuz o'xshashligini aniqlovchi API.",
-                p3_l1: "Python, FastAPI, InsightFace va ONNX Runtime yordamida yuz belgilarini ajratish va kosinus o'xshashligini hisoblash tizimi.",
-                p3_l2: "Rasm URL manzilini olib, yuzni aniqlaydi va o'xshashlik foizini qaytaradi.",
-                p3_l3: "Loyiha Docker yordamida konteynerizatsiya qilindi va ishlab chiqarishga (production) tayyorlandi."
-            },
-            ru: {
-                name: "Русский", role: "AI Инженер", location: "📍 Ташкент, Узбекистан",
-                skills_title: "Технологии и Навыки", 
-                ai_skills_title: "🤖 ИИ и Данные", backend_skills_title: "⚙️ Бэкенд и DevOps",
-                exp_title: "Опыт работы", exp_role: "AI Инженер", exp_company: "Tenzorsoft | Ташкент, Узбекистан",
-                exp_date: "08/2025 - 03/2026", exp_desc: "Создал рабочий процесс ИИ с использованием LangGraph для химической промышленности Узбекистана.",
-                edu_title: "Образование", edu_degree: "Бакалавр: Агробизнес и Цифровая Экономика",
-                edu_uni: "Андижанский институт сельского хозяйства и агротехнологий",
-                lang_title: "Языки", 
-                lang_uz: "<img src='https://flagcdn.com/w20/uz.png' class='flag-icon' alt='UZ'> Узбекский", 
-                lang_en: "<img src='https://flagcdn.com/w20/gb.png' class='flag-icon' alt='EN'> Английский", 
-                lang_ru: "<img src='https://flagcdn.com/w20/ru.png' class='flag-icon' alt='RU'> Русский", 
-                lang_native: "Родной",
-                proj_title: "Проекты",
-                p1_desc: "Разработан ИИ-помощник для платформы Химической промышленности РУз, позволяющий задавать бизнес-вопросы на естественном языке.",
-                p1_l1: "Использует LangGraph для классификации намерений, генерации SQL и выполнения запросов в PostgreSQL.",
-                p1_l2: "Разработан для корпоративной аналитики: продажи, долги, контракты и складские остатки.",
-                p1_l3: "Бэкенд на FastAPI с памятью сессий, структурированным выводом таблиц и мультиязычностью.",
-                p2_desc: "Платформа анализа юридических контрактов на основе ИИ с учетом законодательства РУз (FastAPI + Streamlit).",
-                p2_l1: "Обрабатывает контракты PDF, DOCX и TXT для оценки юридического соответствия и рисков.",
-                p2_l2: "Реализована архитектура RAG с использованием LangChain, Chroma и Gemini по локальным законам.",
-                p2_l3: "Выполняет бенчмаркинг рыночных цен через веб-поиск и выдает готовые к решениям резюме.",
-                p3_desc: "API для распознавания лиц для платформ знакомств, помогающий верифицировать профили.",
-                p3_l1: "Создан на Python, FastAPI, InsightFace и ONNX Runtime для сравнения лиц с помощью косинусного сходства.",
-                p3_l2: "Принимает URL изображений, обрабатывает их и возвращает процент сходства.",
-                p3_l3: "Контейнеризован с помощью Docker для быстрого и надежного развертывания."
-            }
-        };
-
-        const dropdown = document.getElementById('lang-dropdown');
-        const langBtn = document.getElementById('lang-btn');
-        const currentLangText = document.getElementById('current-lang-text');
-        const langItems = document.querySelectorAll('.dropdown-menu li');
-
-        langBtn.addEventListener('click', () => { dropdown.classList.toggle('open'); });
-
-        document.addEventListener('click', (e) => {
-            if (!dropdown.contains(e.target)) dropdown.classList.remove('open');
-        });
-
-        function setLanguage(lang) {
-            document.querySelectorAll('[data-i18n]').forEach(el => {
-                const key = el.getAttribute('data-i18n');
-                if (translations[lang] && translations[lang][key]) {
-                    el.innerHTML = translations[lang][key];
-                }
-            });
-            currentLangText.textContent = translations[lang].name;
-            localStorage.setItem('portfolio_lang', lang);
-        }
-
-        const savedLang = localStorage.getItem('portfolio_lang') || 'en';
-        setLanguage(savedLang);
-
-        langItems.forEach(item => {
-            item.addEventListener('click', () => {
-                const selectedLang = item.getAttribute('data-value');
-                setLanguage(selectedLang);
-                dropdown.classList.remove('open');
-            });
-        });
-
-        const themeSwitch = document.getElementById('theme-switch');
-        const root = document.documentElement;
-        const savedTheme = localStorage.getItem('portfolio_theme') || 'dark';
-        if (savedTheme === 'light') root.setAttribute('data-theme', 'light');
-
-        themeSwitch.addEventListener('click', () => {
-            if (root.getAttribute('data-theme') === 'light') {
-                root.removeAttribute('data-theme');
-                localStorage.setItem('portfolio_theme', 'dark');
-            } else {
-                root.setAttribute('data-theme', 'light');
-                localStorage.setItem('portfolio_theme', 'light');
-            }
-        });
-
-        const canvas = document.getElementById('bg-canvas');
-        const ctx = canvas.getContext('2d');
-        let width, height, particles = [];
-        
-        function resizeCanvas() { width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; }
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
-
-        class Particle {
-            constructor() {
-                this.x = Math.random() * width; this.y = Math.random() * height;
-                this.vx = (Math.random() - 0.5) * 0.5; this.vy = (Math.random() - 0.5) * 0.5;
-                this.radius = Math.random() * 2 + 1;
-            }
-            update() {
-                this.x += this.vx; this.y += this.vy;
-                if (this.x < 0 || this.x > width) this.vx *= -1;
-                if (this.y < 0 || this.y > height) this.vy *= -1;
-            }
-            draw() {
-                ctx.beginPath(); ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-                const isLight = document.documentElement.getAttribute('data-theme') === 'light';
-                ctx.fillStyle = isLight ? 'rgba(41, 98, 255, 0.5)' : 'rgba(130, 170, 255, 0.5)'; ctx.fill();
-            }
-        }
-
-        for (let i = 0; i < 80; i++) particles.push(new Particle());
-
-        function animate() {
-            ctx.clearRect(0, 0, width, height);
-            const isLight = document.documentElement.getAttribute('data-theme') === 'light';
-            for (let i = 0; i < particles.length; i++) {
-                particles[i].update(); particles[i].draw();
-                for (let j = i; j < particles.length; j++) {
-                    const dx = particles[i].x - particles[j].x, dy = particles[i].y - particles[j].y;
-                    const distance = Math.sqrt(dx * dx + dy * dy);
-                    if (distance < 120) {
-                        ctx.beginPath();
-                        ctx.strokeStyle = isLight ? `rgba(41, 98, 255, ${0.15 - distance/800})` : `rgba(130, 170, 255, ${0.15 - distance/800})`;
-                        ctx.lineWidth = 1; ctx.moveTo(particles[i].x, particles[i].y); ctx.lineTo(particles[j].x, particles[j].y); ctx.stroke();
-                    }
-                }
-            }
-            requestAnimationFrame(animate);
-        }
-        animate();
+        document.getElementById('fl-en').src = FLAGS.gb;
+        document.getElementById('fl-ru').src = FLAGS.ru;
+        document.getElementById('fl-uz').src = FLAGS.uz;
     </script>
 </body>
 </html>

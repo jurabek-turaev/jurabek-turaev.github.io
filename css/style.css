@@ -1,0 +1,622 @@
+/* ============================================================
+   Jurabek Turaev — Portfolio
+   Concept: Bento grid. Asymmetric cards, monospace data accents,
+   indigo/violet + cyan on a hue-biased slate ground.
+   ============================================================ */
+
+:root {
+  /* Ground — slate biased slightly toward the indigo accent, never pure grey */
+  --bg: #0a0c13;
+  --bg-2: #0e111b;
+  --surface: #121624;
+  --surface-2: #161b2c;
+  --hair: rgba(146, 155, 190, 0.14);
+  --hair-strong: rgba(146, 155, 190, 0.28);
+
+  /* Ink */
+  --ink: #f3f5fc;
+  --ink-2: #aab1c9;
+  --ink-3: #6f7797;
+
+  /* Accents */
+  --indigo: #6366f1;
+  --violet: #a78bfa;
+  --cyan: #34d3ee;
+  --grad: linear-gradient(115deg, var(--indigo), var(--violet) 55%, var(--cyan));
+
+  /* Per-project accent hues */
+  --c-pawura: #6366f1;   /* indigo  */
+  --c-chem:   #22c55e;   /* green   — SQL/data */
+  --c-law:    #f59e0b;   /* amber   — legal   */
+  --c-face:   #ec4899;   /* pink    — dating  */
+  --c-live:   #22c55e;
+
+  --glow: rgba(99, 102, 241, 0.28);
+  /* Two-layer, softer shadow: a tight ambient layer + a wide diffuse one.
+     Lower opacity so the lift reads as gradual rather than a sudden dark box. */
+  --shadow: 0 4px 12px -4px rgba(0, 0, 0, 0.3), 0 18px 40px -16px rgba(0, 0, 0, 0.45);
+  /* Resting shadow (matches the structure so hover only changes intensity/blur,
+     which the browser can interpolate smoothly). */
+  --shadow-rest: 0 1px 2px -1px rgba(0, 0, 0, 0.15), 0 2px 6px -4px rgba(0, 0, 0, 0.2);
+
+  --radius: 18px;
+  --gap: 16px;
+
+  --font-display: "Space Grotesk", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+
+:root[data-theme="light"] {
+  --bg: #eef0f7;
+  --bg-2: #e7eaf4;
+  --surface: #ffffff;
+  --surface-2: #f6f7fc;
+  --hair: rgba(30, 40, 80, 0.1);
+  --hair-strong: rgba(30, 40, 80, 0.2);
+
+  --ink: #10131f;
+  --ink-2: #414a63;
+  --ink-3: #737b95;
+
+  --indigo: #4f46e5;
+  --violet: #7c3aed;
+  --cyan: #0891b2;
+
+  --glow: rgba(79, 70, 229, 0.18);
+  --shadow: 0 4px 12px -4px rgba(40, 50, 100, 0.14), 0 18px 40px -16px rgba(40, 50, 100, 0.22);
+  --shadow-rest: 0 1px 2px -1px rgba(40, 50, 100, 0.08), 0 2px 6px -4px rgba(40, 50, 100, 0.1);
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--ink-2);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  transition: background 0.4s ease, color 0.4s ease;
+}
+
+/* Ambient background: two soft blobs + faint dot grid */
+.bg-fx {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  overflow: hidden;
+  pointer-events: none;
+}
+.bg-fx::before,
+.bg-fx::after {
+  content: "";
+  position: absolute;
+  width: 60vw;
+  height: 60vw;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.5;
+}
+.bg-fx::before {
+  top: -20%;
+  left: -10%;
+  background: radial-gradient(circle, var(--indigo), transparent 70%);
+}
+.bg-fx::after {
+  bottom: -25%;
+  right: -10%;
+  background: radial-gradient(circle, var(--cyan), transparent 70%);
+  opacity: 0.35;
+}
+.bg-grid {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-image: radial-gradient(var(--hair) 1px, transparent 1px);
+  background-size: 34px 34px;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 30%, #000 30%, transparent 80%);
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* ---------- Controls ---------- */
+.controls {
+  position: fixed;
+  top: 18px;
+  right: 18px;
+  display: flex;
+  gap: 10px;
+  z-index: 100;
+}
+.ctrl {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: color-mix(in srgb, var(--surface) 75%, transparent);
+  border: 1px solid var(--hair);
+  color: var(--ink);
+  border-radius: 12px;
+  padding: 8px 14px;
+  font: inherit;
+  font-size: 0.9rem;
+  cursor: pointer;
+  backdrop-filter: blur(14px);
+  transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+}
+.ctrl:hover {
+  border-color: var(--hair-strong);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px var(--glow);
+}
+.chev { width: 13px; height: 13px; fill: currentColor; transition: transform 0.35s cubic-bezier(0.68,-0.55,0.27,1.55); }
+.dd.open .chev { transform: rotate(180deg); }
+.dd { position: relative; }
+.dd-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 150px;
+  list-style: none;
+  margin: 0;
+  padding: 6px;
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  border: 1px solid var(--hair);
+  border-radius: 12px;
+  backdrop-filter: blur(16px);
+  box-shadow: var(--shadow);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px) scale(0.97);
+  transition: all 0.3s cubic-bezier(0.17,0.88,0.32,1.28);
+  z-index: 101;
+}
+.dd.open .dd-menu { opacity: 1; visibility: visible; transform: translateY(0) scale(1); }
+.dd-menu li {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  color: var(--ink);
+  font-size: 0.88rem;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.dd-menu li:hover { background: color-mix(in srgb, var(--indigo) 16%, transparent); color: var(--ink); }
+.flag { width: 20px; height: 14px; border-radius: 2px; object-fit: cover; box-shadow: 0 1px 2px rgba(0,0,0,0.3); }
+
+#theme-btn { width: 40px; height: 40px; padding: 0; justify-content: center; position: relative; overflow: hidden; }
+#theme-btn svg { position: absolute; width: 18px; height: 18px; transition: transform 0.55s cubic-bezier(0.68,-0.55,0.27,1.55), opacity 0.35s; }
+.i-sun { opacity: 1; transform: rotate(0) scale(1); }
+.i-moon { opacity: 0; transform: rotate(-90deg) scale(0.4); }
+:root[data-theme="light"] .i-sun { opacity: 0; transform: rotate(90deg) scale(0.4); }
+:root[data-theme="light"] .i-moon { opacity: 1; transform: rotate(0) scale(1); }
+
+/* ---------- Layout shell ---------- */
+.wrap {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 4.5rem 1.25rem 4rem;
+}
+
+/* Bento grid: 6 columns on desktop, collapses down */
+.bento {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: var(--gap);
+}
+@media (max-width: 860px) { .bento { grid-template-columns: repeat(4, 1fr); } }
+@media (max-width: 560px) { .bento { grid-template-columns: repeat(2, 1fr); } }
+
+/* Cell base */
+.cell {
+  position: relative;
+  z-index: 1;
+  background: linear-gradient(180deg, var(--surface), var(--surface-2));
+  border: 1px solid var(--hair);
+  border-radius: var(--radius);
+  padding: 1.4rem;
+  overflow: hidden;
+  /* Start from a small shadow with the SAME structure as the hover shadow.
+     Interpolating shadow→shadow (not transparent→shadow) is what the browser
+     animates smoothly, so the lift feels gradual instead of snapping. */
+  box-shadow: var(--shadow-rest);
+  transition:
+    border-color 0.25s ease,
+    transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.35s ease;
+}
+.cell:hover {
+  z-index: 2;                 /* lift the shadow above neighbouring cells */
+  border-color: var(--hair-strong);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow);
+}
+
+/* Column spans */
+.col-2 { grid-column: span 2; }
+.col-3 { grid-column: span 3; }
+.col-4 { grid-column: span 4; }
+.col-6 { grid-column: span 6; }
+.row-2 { grid-row: span 2; }
+
+/* Tablet: 4-col grid */
+@media (max-width: 860px) {
+  .col-4 { grid-column: span 4; }   /* hero full width */
+  .col-3 { grid-column: span 2; }
+  .col-2 { grid-column: span 2; }   /* skills/projects: 2 per row */
+  .col-6 { grid-column: 1 / -1; }
+  .m-full { grid-column: 1 / -1; }
+  .s-half { grid-column: span 1; }  /* stats: 4 across on one row */
+}
+
+/* Phone: 2-col grid — most cells full width, stats stay paired */
+@media (max-width: 560px) {
+  .col-2, .col-3, .col-4, .col-6, .m-full { grid-column: 1 / -1; }
+  .s-half { grid-column: span 1; }  /* 2 stats per row */
+}
+
+/* ---------- Hero cell ---------- */
+.hero { display: flex; flex-direction: column; justify-content: center; gap: 14px; }
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 5vw, 3.3rem);
+  line-height: 1.02;
+  margin: 0;
+  color: var(--ink);
+  letter-spacing: -1.5px;
+  text-wrap: balance;
+}
+.hero .role {
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 2.2vw, 1.25rem);
+  font-weight: 500;
+  margin: 0;
+  background: var(--grad);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.hero p { margin: 4px 0 0; color: var(--ink-2); max-width: 46ch; font-size: 0.95rem; }
+.hero-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.82rem;
+  color: var(--ink-2);
+  text-decoration: none;
+  background: color-mix(in srgb, var(--bg-2) 60%, transparent);
+  border: 1px solid var(--hair);
+  border-radius: 10px;
+  padding: 6px 12px;
+  transition: color 0.2s, border-color 0.2s, transform 0.2s;
+}
+.chip:hover { color: var(--ink); border-color: var(--hair-strong); transform: translateY(-2px); }
+
+/* ---------- Portrait / avatar cell ---------- */
+.avatar-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  text-align: center;
+  background:
+    radial-gradient(circle at 50% 0%, color-mix(in srgb, var(--indigo) 22%, transparent), transparent 70%),
+    linear-gradient(180deg, var(--surface), var(--surface-2));
+}
+.avatar-frame {
+  width: 96px;
+  height: 96px;
+  border-radius: 24px;
+  padding: 3px;
+  background: var(--grad);
+  box-shadow: 0 12px 30px var(--glow);
+}
+.avatar-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 21px;
+  object-fit: cover;
+  display: block;
+}
+.monogram {
+  width: 100%;
+  height: 100%;
+  border-radius: 21px;
+  display: grid;
+  place-items: center;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 2.2rem;
+  color: #fff;
+  background: var(--grad);
+}
+.avail {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.78rem;
+  color: var(--ink-2);
+  font-family: var(--font-mono);
+}
+.pulse-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--c-live);
+  box-shadow: 0 0 0 0 rgba(34,197,94,0.6);
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(34,197,94,0.55); }
+  70% { box-shadow: 0 0 0 9px rgba(34,197,94,0); }
+  100% { box-shadow: 0 0 0 0 rgba(34,197,94,0); }
+}
+
+/* ---------- Stat cells ---------- */
+.stat { display: flex; flex-direction: column; justify-content: center; gap: 2px; }
+.stat .num {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 4vw, 2.4rem);
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.stat .num .accent { background: var(--grad); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+.stat .label { font-size: 0.8rem; color: var(--ink-3); font-family: var(--font-mono); letter-spacing: 0.5px; }
+
+/* ---------- Section label cell ---------- */
+.sec-label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: none;
+  border: none;
+  box-shadow: none;
+  padding: 8px 4px;
+}
+.sec-label:hover { transform: none; box-shadow: none; border: none; }
+.sec-label h2 {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  color: var(--ink);
+  margin: 0;
+  letter-spacing: -0.3px;
+}
+.sec-label .line { flex: 1; height: 1px; background: var(--hair); }
+.sec-label .idx { font-family: var(--font-mono); font-size: 0.75rem; color: var(--ink-3); }
+
+/* ---------- Skills cell ---------- */
+.skills-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  font-family: var(--font-display);
+  font-size: 0.98rem;
+  color: var(--ink);
+}
+.skills-head .dot { width: 8px; height: 8px; border-radius: 3px; background: var(--accent, var(--indigo)); }
+.tags { display: flex; flex-wrap: wrap; gap: 7px; }
+.tag {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--ink-2);
+  background: color-mix(in srgb, var(--bg-2) 55%, transparent);
+  border: 1px solid var(--hair);
+  border-radius: 8px;
+  padding: 5px 10px;
+  transition: color 0.2s, border-color 0.2s, transform 0.2s, background 0.2s;
+  cursor: default;
+}
+.tag:hover {
+  color: var(--ink);
+  border-color: color-mix(in srgb, var(--accent, var(--indigo)) 60%, transparent);
+  background: color-mix(in srgb, var(--accent, var(--indigo)) 12%, transparent);
+  transform: translateY(-2px);
+}
+
+/* ---------- Timeline (experience) ---------- */
+.tl-item { position: relative; padding-left: 20px; }
+.tl-item + .tl-item { margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--hair); }
+.tl-item::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 6px;
+  width: 9px; height: 9px;
+  border-radius: 50%;
+  background: var(--indigo);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--indigo) 22%, transparent);
+}
+.tl-item.current::before { background: var(--c-live); box-shadow: 0 0 0 4px color-mix(in srgb, var(--c-live) 22%, transparent); }
+.tl-top { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.tl-role { font-family: var(--font-display); font-weight: 600; color: var(--ink); font-size: 1rem; }
+.tl-date { font-family: var(--font-mono); font-size: 0.75rem; color: var(--ink-3); white-space: nowrap; }
+.tl-org { font-size: 0.87rem; color: var(--ink-2); margin: 2px 0 6px; }
+.tl-desc { font-size: 0.87rem; color: var(--ink-2); margin: 0; }
+
+/* ---------- Education / languages ---------- */
+.edu-block + .edu-block { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--hair); }
+.edu-deg { font-family: var(--font-display); font-weight: 600; color: var(--ink); font-size: 0.98rem; }
+.edu-uni { font-size: 0.85rem; color: var(--ink-2); }
+.lang-row { display: flex; justify-content: space-between; align-items: center; padding: 7px 0; font-size: 0.88rem; }
+.lang-row + .lang-row { border-top: 1px dashed var(--hair); }
+.lang-name { display: flex; align-items: center; gap: 8px; color: var(--ink-2); }
+.lang-lvl { color: var(--ink); font-family: var(--font-mono); font-size: 0.8rem; }
+
+/* ---------- Pawura flagship cell ---------- */
+.flagship { --accent: var(--c-pawura); }
+.flagship::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 0% 0%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 55%);
+  pointer-events: none;
+}
+.fs-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 4px; position: relative; }
+.fs-title { font-family: var(--font-display); font-size: 1.5rem; color: var(--ink); margin: 0; letter-spacing: -0.5px; }
+.badge-live {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: var(--font-mono); font-size: 0.72rem; font-weight: 600;
+  color: var(--c-live);
+  background: color-mix(in srgb, var(--c-live) 14%, transparent);
+  border: 1px solid color-mix(in srgb, var(--c-live) 35%, transparent);
+  border-radius: 20px; padding: 3px 11px;
+}
+.fs-tagline { font-size: 0.82rem; color: var(--ink-3); font-family: var(--font-mono); margin: 0 0 12px; position: relative; }
+.fs-desc { color: var(--ink-2); font-size: 0.95rem; margin: 0 0 18px; position: relative; max-width: 62ch; }
+
+.fs-features { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 18px; position: relative; }
+@media (max-width: 640px) { .fs-features { grid-template-columns: 1fr; } }
+.feat {
+  display: flex; gap: 11px;
+  padding: 13px;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--bg-2) 55%, transparent);
+  border: 1px solid var(--hair);
+  transition: border-color 0.25s, transform 0.25s;
+}
+.feat:hover { border-color: color-mix(in srgb, var(--accent) 50%, transparent); transform: translateY(-2px); }
+.feat-ic { font-size: 1.35rem; line-height: 1.3; }
+.feat h4 { margin: 0 0 3px; font-size: 0.92rem; color: var(--ink); font-family: var(--font-display); }
+.feat p { margin: 0; font-size: 0.8rem; color: var(--ink-2); line-height: 1.5; }
+
+.fs-links { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; position: relative; }
+.btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 9px 18px; border-radius: 11px;
+  font-size: 0.88rem; font-weight: 600; text-decoration: none;
+  font-family: var(--font-display);
+  transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+}
+.btn-fill { background: var(--grad); color: #fff; }
+.btn-fill:hover { transform: translateY(-2px); box-shadow: 0 10px 24px var(--glow); }
+.btn-ghost { color: var(--ink); border: 1px solid var(--hair-strong); }
+.btn-ghost:hover { transform: translateY(-2px); background: color-mix(in srgb, var(--accent) 12%, transparent); }
+
+/* ---------- Project cell (AI projects) ---------- */
+.proj { --accent: var(--indigo); display: flex; flex-direction: column; }
+.proj.chem { --accent: var(--c-chem); }
+.proj.law  { --accent: var(--c-law); }
+.proj.face { --accent: var(--c-face); }
+.proj::after {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--accent);
+  opacity: 0.85;
+}
+.proj-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 6px; }
+.proj-title { font-family: var(--font-display); font-size: 1.08rem; color: var(--ink); margin: 0; }
+.proj-kind {
+  font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.5px;
+  text-transform: uppercase; color: var(--accent);
+  border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
+  border-radius: 6px; padding: 2px 7px; white-space: nowrap;
+}
+.proj-desc { font-size: 0.87rem; color: var(--ink-2); margin: 0 0 12px; }
+.proj-points { margin: 0 0 14px; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 7px; }
+.proj-points li { position: relative; padding-left: 16px; font-size: 0.82rem; color: var(--ink-2); line-height: 1.5; }
+.proj-points li::before {
+  content: "▹";
+  position: absolute; left: 0; top: 0;
+  color: var(--accent); font-size: 0.85rem;
+}
+.proj-foot { margin-top: auto; display: flex; flex-wrap: wrap; gap: 6px; }
+.proj-tag {
+  font-family: var(--font-mono); font-size: 0.72rem; color: var(--ink-3);
+  background: color-mix(in srgb, var(--bg-2) 50%, transparent);
+  border: 1px solid var(--hair); border-radius: 6px; padding: 3px 8px;
+  transition: color 0.2s, border-color 0.2s;
+}
+.proj:hover .proj-tag { border-color: color-mix(in srgb, var(--accent) 35%, transparent); }
+
+/* ---------- Footer ---------- */
+.foot { text-align: center; margin-top: 2.5rem; font-size: 0.8rem; color: var(--ink-3); font-family: var(--font-mono); }
+
+/* ---------- Scroll reveal ---------- */
+/* NOTE: `.reveal` sets its own `transition`, which fully REPLACES the one on
+   `.cell` (transition is a single shorthand, not additive). Without restoring
+   it, hovered cells lose their box-shadow/border transitions and the shadow
+   snaps in. So once revealed (`.in`), we hand the full hover transition back. */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.in {
+  opacity: 1;
+  transform: none;
+  transition:
+    border-color 0.25s ease,
+    transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.35s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+  .reveal { opacity: 1; transform: none; }
+  html { scroll-behavior: auto; }
+}
+
+/* Visible keyboard focus */
+a:focus-visible, button:focus-visible, li[tabindex]:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+
+/* ============================================================
+   Responsive refinements — tablet & phone
+   ============================================================ */
+
+/* Tablet */
+@media (max-width: 860px) {
+  .wrap { padding: 4rem 1rem 3rem; }
+}
+
+/* Phone */
+@media (max-width: 560px) {
+  :root { --gap: 12px; }
+  .wrap { padding: 3.75rem 0.85rem 2.5rem; }
+  .cell { padding: 1.15rem; }
+
+  .controls { top: 12px; right: 12px; gap: 8px; }
+  .ctrl { padding: 7px 11px; font-size: 0.82rem; }
+
+  .fs-title { font-size: 1.3rem; }
+  .fs-head { gap: 8px; }
+  .fs-links { gap: 8px; }
+  .btn { flex: 1; justify-content: center; }  /* full-width tappable buttons */
+
+  /* Stack project header title/kind vertically so long titles never clip */
+  .proj-head { flex-direction: column; align-items: flex-start; gap: 6px; }
+  .proj-kind { white-space: normal; }
+
+  .hero-links { gap: 6px; }
+  .chip { font-size: 0.78rem; padding: 5px 10px; }
+}
+
+/* Very small phones (≤380px) — iPhone SE, older Androids */
+@media (max-width: 380px) {
+  .wrap { padding: 3.5rem 0.7rem 2rem; }
+  .cell { padding: 1rem; }
+  .hero h1 { font-size: 2rem; letter-spacing: -1px; }
+  .avatar-frame { width: 84px; height: 84px; }
+  .stat .num { font-size: 1.6rem; }
+  /* Let the long email chip wrap instead of overflowing */
+  .chip { word-break: break-word; }
+}
